@@ -45,28 +45,32 @@ mezcla f@(x:xs) s@(y:ys) = if (x < y)
                            then [x]++(mezcla xs s)
                            else [y]++(mezcla f ys)
 
-mezclaCon :: (Ord a) => Ordering -> [a] -> [a] -> [a]
+-- | mezclaCon. Función de ordenamiento que recibe un comparador.
+mezclaCon ::(a -> a -> Ordering) -> [a] -> [a] -> [a]
 mezclaCon compare f [] = f
 mezclaCon compare [] s = s
-mezclaCon compare f@(x:xs) s@(y:ys) = case compare of
-                                        LT -> mezcla f s
-                                        GT -> mezclaGT f s
-                                        EQ -> []
-                                        where
-                                          mezclaGT f' [] = f'
-                                          mezclaGT [] s' = s'
-                                          mezclaGT f'@(x:xs) s'@(y:ys) =
-                                            if x < y
-                                            then [y]++(mezclaGT f' ys)
-                                            else [x]++(mezclaGT xs s')
+mezclaCon compare f@(x:xs) s@(y:ys)
+    | compare x y == LT = [x]++(mezclaCon compare xs s)
+    | otherwise = [y]++(mezclaCon compare f ys)
 
-mergeSortCon :: (Ord a) => Ordering -> [a] -> [a]
+-- | mergeSortCon. Función auxiliar de mergeSortCon que mergea listas dependiendo
+-- del comparador.
+mergeSortCon :: (a -> a -> Ordering) -> [a] -> [a]
 mergeSortCon compare [] = []
 mergeSortCon compare [x] = [x]
-mergeSortCon compare xs = mezclaCon compare (mergeSortCon compare f)
-  (mergeSortCon compare s)
+mergeSortCon compare xs =
+  mezclaCon compare (mergeSortCon compare f) (mergeSortCon compare s)
   where
     (f,s) = parte xs
+
+-- | compareNums. Función que es un comparador, porque no supe llamarlo desde la
+-- versión interactiva sin una función que compare.
+compareNums :: Int -> Int -> Ordering
+compareNums a b
+  | a > b = GT
+  | b > a = LT
+  | otherwise = compare a b
+
 --------------------------------------------------------------------------------
 --------                        TERCERA PARTE                           --------
 --------------------------------------------------------------------------------
@@ -79,6 +83,7 @@ data Balcanes =
 
 type Ady = [(Balcanes, Balcanes)]
 
+-- Adyacencias definidas.
 adyacencias :: Ady
 adyacencias =
   [ (Albania, Montenegro), (Albania, Kosovo), (Albania, Macedonia),
@@ -88,6 +93,8 @@ adyacencias =
 
 type Coloracion = [(Color, Balcanes)]
 
+-- | esBuena. Función que dada una lista de adyacencias y una coloración, nos
+-- dice si es una buena coloración o no.
 esBuena :: Ady -> Coloracion -> Bool
 esBuena ad co =
   let
@@ -101,6 +108,8 @@ esBuena ad co =
     pares [] = []
     pares (z:zs) = [ (x,y) | x <- z, y <- z, y /= x] ++ pares zs
 
+-- | verifica. Función auxiliar que verifica que ciertas adyacencias no se
+-- encuentren en la lista de adyacencias definida.
 verifica :: Ady -> [(Balcanes, Balcanes)] -> Bool
 verifica ad [] = True
 verifica ad (x:xs)
@@ -109,6 +118,12 @@ verifica ad (x:xs)
 
 coloraciones :: Ady -> [Coloracion]
 coloraciones = error "HOLA"
+
+
+colores = [Rojo, Amarillo, Verde, Azul]
+balcanes = [Albania, Bulgaria, BosniayHerzegovina, Kosovo, Macedonia, Montenegro]
+
+todas = [ (x,y) | x <- colores, y <- balcanes]
 
 --------------------------------------------------------------------------------
 --------                          COLORACIONES                          --------
