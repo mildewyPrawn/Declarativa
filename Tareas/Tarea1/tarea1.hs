@@ -1,8 +1,14 @@
+
+-- Emiliano Galeana Araujo
+-- 314032324
+-- galeanaara@ciencias.unam.mx
+-- práctica01 Programación declarativa
+
 module Tarea1 where
 
 import Data.Char
 import Data.List
--- https://stackoverflow.com/questions/7141229/how-to-write-recursive-lambda-expression-in-haskell/7141261
+
 --------------------------------------------------------------------------------
 --------                        PRIMERA PARTE                           --------
 --------------------------------------------------------------------------------
@@ -20,6 +26,7 @@ soloLetras str = [ x | x <- str, isLetter x]
 -- False en otro caso.
 prefijo :: String -> String -> Bool
 prefijo xs ys = head [x | x <- [isPrefixOf xs ys]]
+
 --------------------------------------------------------------------------------
 --------                        SEGUNDA PARTE                           --------
 --------------------------------------------------------------------------------
@@ -79,7 +86,7 @@ data Color = Rojo | Amarillo | Verde | Azul deriving (Eq, Show)
 
 data Balcanes =
   Albania | Bulgaria | BosniayHerzegovina |
-  Kosovo | Macedonia | Montenegro deriving (Eq, Show)
+  Kosovo | Macedonia | Montenegro deriving (Eq, Show, Ord)
 
 type Ady = [(Balcanes, Balcanes)]
 
@@ -95,6 +102,9 @@ type Coloracion = [(Color, Balcanes)]
 
 -- | esBuena. Función que dada una lista de adyacencias y una coloración, nos
 -- dice si es una buena coloración o no.
+-- Saca listas de los paises adyacentes, si la lista tiene un elemento, es una
+-- buena coloración. Y para las que tienen más elementos, saca las tuplas (x,y)
+-- y (y,x).
 esBuena :: Ady -> Coloracion -> Bool
 esBuena ad co =
   let
@@ -106,7 +116,7 @@ esBuena ad co =
     verifica ad (pares$filter (( > 1) . length) colores)
   where
     pares [] = []
-    pares (z:zs) = [ (x,y) | x <- z, y <- z, y /= x] ++ pares zs
+    pares (z:zs) = [ (x,y) | x <- z, y <- z] ++ pares zs
 
 -- | verifica. Función auxiliar que verifica que ciertas adyacencias no se
 -- encuentren en la lista de adyacencias definida.
@@ -116,14 +126,46 @@ verifica ad (x:xs)
   | elem x ad = False
   | otherwise = verifica ad xs
 
-coloraciones :: Ady -> [Coloracion]
-coloraciones = error "HOLA"
-
-
+-- | Lista de todos los colores
+colores :: [Color]
 colores = [Rojo, Amarillo, Verde, Azul]
+
+-- | Lista de todos los Balcanes
+balcanes :: [Balcanes]
 balcanes = [Albania, Bulgaria, BosniayHerzegovina, Kosovo, Macedonia, Montenegro]
 
-todas = [ (x,y) | x <- colores, y <- balcanes]
+-- | coloraciones. Función que obtiene todas las coloraciones dada una lista de
+-- adyacencias. NOTA. genera bajo un orden, y no genera las permutaciones, por lo
+-- que la lista [a,b,c,d,e,f] y la lista [a,b,c,d,f,e] se cuentan como una misma.
+-- Donde a,b,c,d,e,f son tuplas de la forma (Color, Balcanes).
+coloraciones :: Ady -> [Coloracion]
+coloraciones ad = filter (esBuena ad) adi
+  where
+    adi = [[(c0,p0)] ++ [(c1,p1)] ++ [(c2,p2)]
+            ++ [(c3,p3)] ++ [(c4,p4)] ++ [(c5,p5)]
+          |
+           c0 <- colores,
+           c1 <- colores,
+           c2 <- colores,
+           c3 <- colores,
+           c4 <- colores,
+           c5 <- colores,
+           p0 <- balcanes,
+           p1 <- balcanes,
+           p2 <- balcanes,
+           p3 <- balcanes,
+           p4 <- balcanes,
+           p5 <- balcanes,
+           p0 /= p1, p0 /= p2, p0 /= p3, p0 /= p4, p0 /= p5,
+           p1 /= p2, p1 /= p3, p1 /= p4, p1 /= p5,
+           p2 /= p3, p2 /= p4, p2 /= p5,
+           p3 /= p4, p3 /= p5,
+           p4 /= p5,
+           p0 < p1, p0 < p2, p0 < p3, p0 < p4, p0 < p5,
+           p1 < p2, p1 < p3, p1 < p4, p1 < p5,
+           p2 < p3, p2 < p4, p2 < p5,
+           p3 < p4, p3 < p5,
+           p4 < p5]
 
 --------------------------------------------------------------------------------
 --------                          COLORACIONES                          --------
@@ -162,3 +204,15 @@ parte2 = parte [1,2,3,4,5]
 
 mezcla1 = mezcla [3,17] [4,18]
 -- regresa: [3,4,17,18]
+
+mergeSortCon1 = mergeSortCon compareNums [3,4,5,6,1,5,7,8,2,45,6,7,1,4]
+-- regresa: [1,1,2,3,4,4,5,5,6,6,7,7,8,45]
+
+esBuena1 = esBuena adyacencias coloracionBuena
+-- regresa: True
+
+esBuena2 = esBuena adyacencias coloracionMala
+-- regresa: False
+
+coloraciones1 = coloraciones adyacencias
+-- regresa una lista de 432 elementos, muy larga para ponerla aquí
