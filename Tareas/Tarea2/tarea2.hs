@@ -46,8 +46,8 @@ ramanujan :: Int -> [(Int, Int, Int, Int)]
 ramanujan = error "Falta"
 
 
--- | compareTups. Función que es un comparador, porque no supe llamarlo desde la
--- versión interactiva sin una función que compare.
+-- | compareTups. Función que es un comparador de tuplas, las ordena de mayor a
+-- menor en el Int, que es el orden de aparición
 compareTups :: (Ord a) => (a, Int) -> (a, Int) -> Ordering
 compareTups (x, n) (y, m)
   | n < m = GT
