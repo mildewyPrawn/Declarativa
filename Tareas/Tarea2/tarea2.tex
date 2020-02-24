@@ -28,21 +28,21 @@
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
 \lstdefinestyle{mystyle}{
-  backgroundcolor=\color{backcolour},   
+  backgroundcolor=\color{backcolour},
   commentstyle=\color{codegreen},
   keywordstyle=\color{magenta},
   numberstyle=\tiny\color{codegray},
   stringstyle=\color{codepurple},
   basicstyle=\ttfamily\footnotesize,
-  breakatwhitespace=false,         
-  breaklines=true,                 
-  captionpos=b,                    
-  keepspaces=true,                 
-  numbers=left,                    
-  numbersep=5pt,                  
-  showspaces=false,                
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=left,
+  numbersep=5pt,
+  showspaces=false,
   showstringspaces=false,
-  showtabs=false,                  
+  showtabs=false,
   tabsize=2
 }
 
@@ -69,7 +69,7 @@
     \item Caso base:
     \begin{lstlisting}[language=Haskell]
       sum . map double [] = double . sum []
-      sum . 0 = double . sum []
+      sum . [] = double . sum []
       0 = double . sum []
       sum [] = double sum []
       double . sum [] = double . sum []
@@ -99,7 +99,7 @@
       double . sum (x:xs) = double . sum (x:xs)
     \end{lstlisting}
   \end{itemize}
-  
+
 \item
   \begin{lstlisting}[language=Haskell]
     sum . map sum = sum . concat
@@ -126,17 +126,18 @@
     \end{itemize}
     \begin{lstlisting}[language=Haskell]
       sum . map sum (x:xs) = sum . concat (x:xs)
-      -- Defincion de aplicar map sum a la cabeza de x:xs. Definimos sum' x como
-      el resultado de sum x.
+      -- Defincion de aplicar map sum a la cabeza de x:xs. Definimos
+      -- sum' x como el resultado de sum x.
       sum [sum' x] . map sum xs = sum . concat (x:xs)
-      -- Definicion de aplicar sum a una lista con un elemento (sum' x).
+      -- Definicion de aplicar sum a una lista con un
+      -- elemento (sum' x).
       (sum' x) + sum . map xs = sum . concat (x:xs)
       -- Hipotesis.
       (sum' x) + sum . concat (xs) = sum . concat (x:xs)
       -- Metemos la suma a la funcion sum.
       sum [sum' x] . concat (xs) = sum . concat (x:xs)
-      -- Como [sum' x] es el resultado de la aplicar sum a la lista x. Siendo x
-      una lista, podemos hacer lo siguiente.
+      -- Como [sum' x] es el resultado de la aplicar sum a la
+      -- lista x. Siendo x una lista, podemos hacer lo siguiente.
       sum . concat (x:xs) = sum . concat (x:xs)
     \end{lstlisting}
   \end{itemize}
@@ -146,6 +147,16 @@
     sum . sort = sum
   \end{lstlisting}
   \begin{itemize}
+  	\item Definicion sort:
+  	\begin{lstlisting}[language=Haskell]
+	  sort [] = []
+	  sort [x] = [x]
+	  sort xs = mezcla (sort f) (sort s)
+	                 where (f,s) = parte xs
+    \end{lstlisting}
+    Suponemos que parte está bien definido y parte de (x:xs) regresa una
+    tupla $(f,s)$ dónde $f ++ s = (x:xs) $
+
     \item Caso base:
     \begin{lstlisting}[language=Haskell]
       sum . sort [] = sum []
@@ -158,7 +169,7 @@
   \item Paso inductivo
     \begin{itemize}
     \item [--] Por demostrar
-      \begin{lstlisting}[language=Haskell]
+    \begin{lstlisting}[language=Haskell]
         sum . sort (x:xs) = sum (x:xs)
         -- Ordenar la cola de una lista y luego ordenar la cola (ordenada)
         concatenada a la cabeza es lo mismo que ordenar toda la lista.
@@ -172,9 +183,31 @@
         -- Definicion de concatenar.
         sum (x:xs) = sum (x:xs)
       \end{lstlisting}
+    \begin{lstlisting}[language=Haskell]
+        sum . sort (x:xs) = sum (x:xs)
+        sum . mezcla (sort f) (sort s)= sum (x:xs)
+        -- Por la propiedad demostrada en clase sabemos que
+        -- sum . mezcla (xs ys) = sum (xs ys), entonces
+        sum . (sort f) ++ (sort s) = sum (x:xs)
+        -- Por la otra propiedad demostrada en clase sabemos
+        --  que: sum (xs ++ ys) = sum xs + sum ys, entonces:
+        sum (sort f) + sum (sort s) = sum (x:xs)
+        -- aplicamos la hipotesis de induccion:
+        sum f + sum s = sum (x:xs)
+        -- Aplicamos la segunda propiedad demostrada en
+        -- clase hacia el otro lado
+        sum (f ++ s) = sum (x:xs)
+        -- Sabemos que f ++ s = (x:xs) porque como se
+        -- establecio al principio, parte esta bien definida y
+        -- terminamos
+        sum (x:xs) = sum (x:xs)
+    \end{lstlisting}
+
     \end{itemize}
+
+
   \end{itemize}
-  
+
 \end{itemize}
 Donde, \texttt{double} se define de la siguiente manera:
 \begin{lstlisting}[language=Haskell]
@@ -198,12 +231,12 @@ esta. Demuesrta o da un contraejemplo:
   \begin{lstlisting}[language=Haskell]
     take m . take n = take (min m n)
   \end{lstlisting}
-  
+
 \item
   \begin{lstlisting}[language=Haskell]
     map f . take n = take n . map f
   \end{lstlisting}
-  
+
 \item
   \begin{lstlisting}[language=Haskell]
     filter p . concat = concat . map (filter p)
