@@ -48,7 +48,19 @@ ramanujan n = limpia [ (a,b,c,d) | a <- [1..n], b <- [1..n], c <- [1..n],
                 cumple a b c d]
   where
     cumple a b c d = a^3 + b^3 == c^3 + d^3
-    
+
+--------------------------------------------------------------------------------
+--------                          AUXILIARES                            --------
+--------------------------------------------------------------------------------
+
+-- | compareTups. Función que es un comparador de tuplas, las ordena de mayor a
+-- menor en el Int, que es el orden de aparición
+compareTups :: (Ord a) => (a, Int) -> (a, Int) -> Ordering
+compareTups (x, n) (y, m)
+  | n < m = GT
+  | m < n = LT
+  | otherwise = compare x y
+
 -- | limpia. Función que elimina repetidos en una lista de tuplas siguiendo un
 -- orden
 limpia :: (Eq c) => [(c, c, c, c)] -> [(c, c, c, c)]
@@ -62,18 +74,11 @@ limpia (r@(a,b,c,d):xs) =
   where
     deleteSub l = filter (`notElem` l)
 
+double :: Integer -> Integer
+double x = 2 * x
 
---------------------------------------------------------------------------------
---------                          COMPARADOR                            --------
---------------------------------------------------------------------------------
-
--- | compareTups. Función que es un comparador de tuplas, las ordena de mayor a
--- menor en el Int, que es el orden de aparición
-compareTups :: (Ord a) => (a, Int) -> (a, Int) -> Ordering
-compareTups (x, n) (y, m)
-  | n < m = GT
-  | m < n = LT
-  | otherwise = compare x y
+conci [] = []
+conci (x:xs) = x++conci xs
 
 --------------------------------------------------------------------------------
 --------                             Pruebas                            --------
