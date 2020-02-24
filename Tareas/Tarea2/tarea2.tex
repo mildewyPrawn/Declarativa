@@ -133,7 +133,7 @@
       (sum' x) + sum . map xs = sum . concat (x:xs)
       -- Hipotesis.
       (sum' x) + sum . concat (xs) = sum . concat (x:xs)
-      -- Metemos la suma a la función sum.
+      -- Metemos la suma a la funcion sum.
       sum [sum' x] . concat (xs) = sum . concat (x:xs)
       -- Como [sum' x] es el resultado de la aplicar sum a la lista x. Siendo x
       una lista, podemos hacer lo siguiente.
@@ -149,6 +149,7 @@
     \item Caso base:
     \begin{lstlisting}[language=Haskell]
       sum . sort [] = sum []
+      sum [] = sum []
     \end{lstlisting}
   \item Hipótesis
     \begin{lstlisting}[language=Haskell]
@@ -159,11 +160,19 @@
     \item [--] Por demostrar
       \begin{lstlisting}[language=Haskell]
         sum . sort (x:xs) = sum (x:xs)
+        -- Ordenar la cola de una lista y luego ordenar la cola (ordenada)
+        concatenada a la cabeza es lo mismo que ordenar toda la lista.
+        sum [x] ++ sort xs = sum (x:xs)
+        -- Definicion de sum.
+        x + sum . sort xs = sum (x:xs)
+        -- Hipotesis.
+        x + sum xs = sum (x:xs)
+        -- Definicion inversa de sum.
+        sum [x]++xs = sum (x:xs)
+        -- Definicion de concatenar.
+        sum (x:xs) = sum (x:xs)
       \end{lstlisting}
     \end{itemize}
-    \begin{lstlisting}[language=Haskell]
-      sum . sort (x:xs) = sum (x:xs)
-    \end{lstlisting}
   \end{itemize}
   
 \end{itemize}
