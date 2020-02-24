@@ -10,9 +10,17 @@
 \usepackage{enumerate}
 \usepackage{float}
 \usepackage{forest}
+\usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{xcolor}
+
+\geometry{
+  a4paper,
+  total={170mm,257mm},
+  left=20mm,
+  top=20mm,
+}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -57,16 +65,107 @@
   \begin{lstlisting}[language=Haskell]
     sum . map double = double . sum
   \end{lstlisting}
+  \begin{itemize}
+    \item Caso base:
+    \begin{lstlisting}[language=Haskell]
+      sum . map double [] = double . sum []
+      sum . 0 = double . sum []
+      0 = double . sum []
+      sum [] = double sum []
+      double . sum [] = double . sum []
+    \end{lstlisting}
+  \item Hipótesis
+    \begin{lstlisting}[language=Haskell]
+      sum . map double xs = double . sum xs
+    \end{lstlisting}
+  \item Paso inductivo
+    \begin{itemize}
+    \item [--] Por demostrar
+      \begin{lstlisting}[language=Haskell]
+        sum . map double (x:xs) = double . sum (x:xs)
+      \end{lstlisting}
+    \end{itemize}
+    \begin{lstlisting}[language=Haskell]
+      sum . map double (x:xs) = double . sum (x:xs)
+      -- Definicion de aplicar double a la cabeza de x:xs.
+      sum . [double x] ++ map double xs = double . sum (x:xs)
+      -- Definicion de aplicar sum ([double x] es igual a [2*x]).
+      2*x + sum . map double xs = double . sum (x:xs)
+      -- Hipotesis.
+      2*x + double . sum xs = double . sum (x:xs)
+      -- Defincion de double inversa.
+      double x + sum xs = double . sum (x:xs)
+      -- Metemos x a la funcion sum.
+      double . sum (x:xs) = double . sum (x:xs)
+    \end{lstlisting}
+  \end{itemize}
   
 \item
   \begin{lstlisting}[language=Haskell]
     sum . map sum = sum . concat
   \end{lstlisting}
-  
+  \begin{itemize}
+    \item Caso base:
+    \begin{lstlisting}[language=Haskell]
+      sum . map sum [] = sum . concat []
+      sum [] = sum . concat []
+      0 = sum . concat []
+      sum [] = sum . concat []
+      sum . concat [] = sum . concat []
+    \end{lstlisting}
+  \item Hipótesis
+    \begin{lstlisting}[language=Haskell]
+      sum . map sum xs = sum . concat xs
+    \end{lstlisting}
+  \item Paso inductivo
+    \begin{itemize}
+    \item [--] Por demostrar
+      \begin{lstlisting}[language=Haskell]
+        sum . map sum (x:xs) = sum . concat (x:xs)
+      \end{lstlisting}
+    \end{itemize}
+    \begin{lstlisting}[language=Haskell]
+      sum . map sum (x:xs) = sum . concat (x:xs)
+      -- Defincion de aplicar map sum a la cabeza de x:xs. Definimos sum' x como
+      el resultado de sum x.
+      sum [sum' x] . map sum xs = sum . concat (x:xs)
+      -- Definicion de aplicar sum a una lista con un elemento (sum' x).
+      (sum' x) + sum . map xs = sum . concat (x:xs)
+      -- Hipotesis.
+      (sum' x) + sum . concat (xs) = sum . concat (x:xs)
+      -- Metemos la suma a la función sum.
+      sum [sum' x] . concat (xs) = sum . concat (x:xs)
+      -- Como [sum' x] es el resultado de la aplicar sum a la lista x. Siendo x
+      una lista, podemos hacer lo siguiente.
+      sum . concat (x:xs) = sum . concat (x:xs)
+    \end{lstlisting}
+  \end{itemize}
+
 \item
   \begin{lstlisting}[language=Haskell]
     sum . sort = sum
   \end{lstlisting}
+  \begin{itemize}
+    \item Caso base:
+    \begin{lstlisting}[language=Haskell]
+      sum . sort [] = sum []
+    \end{lstlisting}
+  \item Hipótesis
+    \begin{lstlisting}[language=Haskell]
+      sum . sort xs = sum xs
+    \end{lstlisting}
+  \item Paso inductivo
+    \begin{itemize}
+    \item [--] Por demostrar
+      \begin{lstlisting}[language=Haskell]
+        sum . sort (x:xs) = sum (x:xs)
+      \end{lstlisting}
+    \end{itemize}
+    \begin{lstlisting}[language=Haskell]
+      sum . sort (x:xs) = sum (x:xs)
+    \end{lstlisting}
+  \end{itemize}
+  
 \end{itemize}
 Donde, \texttt{double} se define de la siguiente manera:
 \begin{lstlisting}[language=Haskell]
