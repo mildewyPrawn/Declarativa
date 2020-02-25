@@ -49,7 +49,7 @@
 \lstset{style=mystyle}
 
 \title{Programación declarativa. Tarea 2\\
-\Huge{The Imperative is Dark and Full of Terrors}}
+  \Huge{The Imperative is Dark and Full of Terrors}}
 \author{Juan Alfonso Garduño Solís\\
   Emiliano Galeana Araujo}
 \affil{Facultad de ciencias, UNAM}
@@ -63,329 +63,378 @@
 \begin{itemize}
 \item
   \begin{lstlisting}[language=Haskell]
-  sum . map double = double . sum\end{lstlisting}
-  \begin{itemize}
-    \item Caso base:
-    \begin{lstlisting}[language=Haskell]
-  sum . map double [] = double . sum []
-  sum . [] = double . sum []
-  0 = double . sum []
-  sum [] = double sum []
-  double . sum [] = double . sum []\end{lstlisting}
-  \item Hipótesis
-    \begin{lstlisting}[language=Haskell]
-  sum . map double xs = double . sum xs\end{lstlisting}
-  \item Paso inductivo
+    sum . map double = double . sum\end{lstlisting}
     \begin{itemize}
-    \item [--] Por demostrar
+    \item Caso base:
       \begin{lstlisting}[language=Haskell]
-  sum . map double (x:xs) = double . sum (x:xs)\end{lstlisting}
-    \end{itemize}
-    \begin{lstlisting}[language=Haskell]
-  sum . map double (x:xs) = double . sum (x:xs)
-  -- Definicion de aplicar double a la cabeza de x:xs.
-  sum . [double x] ++ map double xs = double . sum (x:xs)
-  -- Definicion de aplicar sum ([double x] es igual a [2*x]).
-  2*x + sum . map double xs = double . sum (x:xs)
-  -- Hipotesis.
-  2*x + double . sum xs = double . sum (x:xs)
-  -- Defincion de double inversa.
-  double x + sum xs = double . sum (x:xs)
-  -- Metemos x a la funcion sum.
-  double . sum (x:xs) = double . sum (x:xs) \end{lstlisting}
-  \end{itemize}
-
-\item
-  \begin{lstlisting}[language=Haskell]
-  sum . map sum = sum . concat \end{lstlisting}
-  \begin{itemize}
-    \item Caso base:
-    \begin{lstlisting}[language=Haskell]
-  sum . map sum [] = sum . concat []
-  sum [] = sum . concat []
-  0 = sum . concat []
-  sum [] = sum . concat []
-  sum . concat [] = sum . concat [] \end{lstlisting}
-  \item Hipótesis
-    \begin{lstlisting}[language=Haskell]
-  sum . map sum xs = sum . concat xs \end{lstlisting}
-  \item Paso inductivo
-    \begin{itemize}
-    \item [--] Por demostrar
+        sum . map double [] = double . sum []
+        sum . [] = double . sum []
+        0 = double . sum []
+        sum [] = double sum []
+        double . sum [] = double . sum []\end{lstlisting}
+    \item Hipótesis
       \begin{lstlisting}[language=Haskell]
-  sum . map sum (x:xs) = sum . concat (x:xs) \end{lstlisting}
+        sum . map double xs = double . sum xs\end{lstlisting}
+      \item Paso inductivo
+        \begin{itemize}
+        \item [--] Por demostrar
+          \begin{lstlisting}[language=Haskell]
+            sum . map double (x:xs) = double . sum (x:xs)\end{lstlisting}
+        \end{itemize}
+        \begin{lstlisting}[language=Haskell]
+          sum . map double (x:xs) = double . sum (x:xs)
+          -- Definicion de aplicar double a la cabeza de x:xs.
+          sum . [double x] ++ map double xs = double . sum (x:xs)
+          -- Definicion de aplicar sum ([double x] es igual a [2*x]).
+          2*x + sum . map double xs = double . sum (x:xs)
+          -- Hipotesis.
+          2*x + double . sum xs = double . sum (x:xs)
+          -- Defincion de double inversa.
+          double x + sum xs = double . sum (x:xs)
+          -- Metemos x a la funcion sum.
+          double . sum (x:xs) = double . sum (x:xs) \end{lstlisting}
     \end{itemize}
-    \begin{lstlisting}[language=Haskell]
-  sum . map sum (x:xs) = sum . concat (x:xs)
-  -- Defincion de aplicar map sum a la cabeza de x:xs. Definimos
-  -- sum' x como el resultado de sum x.
-  sum [sum' x] . map sum xs = sum . concat (x:xs)
-  -- Definicion de aplicar sum a una lista con un
-  -- elemento (sum' x).
-  (sum' x) + sum . map xs = sum . concat (x:xs)
-  -- Hipotesis.
-  (sum' x) + sum . concat (xs) = sum . concat (x:xs)
-  -- Metemos la suma a la funcion sum.
-  sum [sum' x] . concat (xs) = sum . concat (x:xs)
-  -- Como [sum' x] es el resultado de la aplicar sum a la
-  -- lista x. Siendo x una lista, podemos hacer lo siguiente.
-  sum . concat (x:xs) = sum . concat (x:xs)\end{lstlisting}
-  \end{itemize}
 
-\item
-  \begin{lstlisting}[language=Haskell]
-  sum . sort = sum \end{lstlisting}
-  \begin{itemize}
-  	\item Definicion sort:
-  	\begin{lstlisting}[language=Haskell]
-  sort [] = []
-  sort [x] = [x]
-  sort xs = mezcla (sort f) (sort s)
-            where (f,s) = parte xs\end{lstlisting}
-
-    Suponemos que parte está bien definido y parte de (x:xs) regresa una
-    tupla $(f,s)$ dónde $f ++ s = (x:xs) $
-
-    \item Caso base:
+  \item
     \begin{lstlisting}[language=Haskell]
-  sum . sort [] = sum []
-  sum [] = sum [] \end{lstlisting}
-  \item Hipótesis
-    \begin{lstlisting}[language=Haskell]
-  sum . sort xs = sum xs \end{lstlisting}
-  \item Paso inductivo
+      sum . map sum = sum . concat \end{lstlisting}
     \begin{itemize}
-    \item [--] Por demostrar
-    \begin{lstlisting}[language=Haskell]
-  sum . sort (x:xs) = sum (x:xs)
-  sum . mezcla (sort f) (sort s)= sum (x:xs)
-  -- Por la propiedad demostrada en clase sabemos que
-  -- sum . mezcla (xs ys) = sum (xs ys), entonces
-  sum . (sort f) ++ (sort s) = sum (x:xs)
-  -- Por la otra propiedad demostrada en clase sabemos
-  --  que: sum (xs ++ ys) = sum xs + sum ys, entonces:
-  sum (sort f) + sum (sort s) = sum (x:xs)
-  -- aplicamos la hipotesis de induccion:
-  sum f + sum s = sum (x:xs)
-  -- Aplicamos la segunda propiedad demostrada en
-  -- clase hacia el otro lado
-  sum (f ++ s) = sum (x:xs)
-  -- Sabemos que f ++ s = (x:xs) porque como se
-  -- establecio al principio, parte esta bien definida y
-  -- terminamos
-   sum (x:xs) = sum (x:xs) \end{lstlisting}
+    \item Caso base:
+      \begin{lstlisting}[language=Haskell]
+        sum . map sum [] = sum . concat []
+        sum [] = sum . concat []
+        0 = sum . concat []
+        sum [] = sum . concat []
+        sum . concat [] = sum . concat [] \end{lstlisting}
+    \item Hipótesis
+      \begin{lstlisting}[language=Haskell]
+        sum . map sum xs = sum . concat xs \end{lstlisting}
+    \item Paso inductivo
+      \begin{itemize}
+      \item [--] Por demostrar
+        \begin{lstlisting}[language=Haskell]
+          sum . map sum (x:xss) = sum . concat (x:xss) \end{lstlisting}
+      \end{itemize}
+      \begin{lstlisting}[language=Haskell]
+        sum . map sum (x:xss) = sum . concat (x:xss)
+        -- Defincion de aplicar map sum a la cabeza de x:xss. Definimos
+        -- sum' x como el resultado de sum x.
+        sum [sum' x] . map sum xss = sum . concat (x:xss)
+        -- Definicion de aplicar sum a una lista con un
+        -- elemento (sum' x).
+        (sum' x) + sum . map xss = sum . concat (x:xss)
+        -- Hipotesis.
+        (sum' x) + sum . concat (xss) = sum . concat (x:xss)
+        -- Metemos la suma a la funcion sum.
+        sum [sum' x] . concat (xss) = sum . concat (x:xss)
+        -- Como [sum' x] es el resultado de la aplicar sum a la
+        -- lista x. Siendo x una lista, podemos hacer lo siguiente.
+        sum . concat (x:xss) = sum . concat (x:xss)\end{lstlisting}
     \end{itemize}
-  \end{itemize}
+
+  \item
+    \begin{lstlisting}[language=Haskell]
+      sum . sort = sum \end{lstlisting}
+    \begin{itemize}
+    \item Definicion sort:
+      \begin{lstlisting}[language=Haskell]
+        sort [] = []
+        sort [x] = [x]
+        sort xs = mezcla (sort f) (sort s)
+        where (f,s) = parte xs\end{lstlisting}
+
+        Suponemos que parte está bien definido y parte de (x:xs) regresa una
+        tupla $(f,s)$ dónde $f ++ s = (x:xs) $
+
+      \item Caso base:
+        \begin{lstlisting}[language=Haskell]
+          sum . sort [] = sum []
+          sum [] = sum [] \end{lstlisting}
+      \item Hipótesis
+        \begin{lstlisting}[language=Haskell]
+          sum . sort xs = sum xs \end{lstlisting}
+      \item Paso inductivo
+        \begin{itemize}
+        \item [--] Por demostrar
+          \begin{lstlisting}[language=Haskell]
+            sum . sort (x:xs) = sum (x:xs)
+            sum . mezcla (sort f) (sort s)= sum (x:xs)
+            -- Por la propiedad demostrada en clase sabemos que
+            -- sum . mezcla (xs ys) = sum (xs ys), entonces
+            sum . (sort f) ++ (sort s) = sum (x:xs)
+            -- Por la otra propiedad demostrada en clase sabemos
+            --  que: sum (xs ++ ys) = sum xs + sum ys, entonces:
+            sum (sort f) + sum (sort s) = sum (x:xs)
+            -- aplicamos la hipotesis de induccion:
+            sum f + sum s = sum (x:xs)
+            -- Aplicamos la segunda propiedad demostrada en
+            -- clase hacia el otro lado
+            sum (f ++ s) = sum (x:xs)
+            -- Sabemos que f ++ s = (x:xs) porque como se
+            -- establecio al principio, parte esta bien definida y
+            -- terminamos
+            sum (x:xs) = sum (x:xs) \end{lstlisting}
+        \end{itemize}
+    \end{itemize}
 
 \end{itemize}
 Donde, \texttt{double} se define de la siguiente manera:
 \begin{lstlisting}[language=Haskell]
   double :: Integer -> Integer
   double x = 2 * x\end{lstlisting}
-Y, \texttt{sum}, \texttt{map}, \texttt{sort} y \texttt{concat} son las definidas en
-el \texttt{Prelude}, de Haskell.
+  Y, \texttt{sum}, \texttt{map}, \texttt{sort} y \texttt{concat} son las definidas en
+  el \texttt{Prelude}, de Haskell.
 
-\section{Función take}
-En Haskell la función \texttt{take n} toma los primeros n elementos de una lista,
-mientras que \texttt{drop n} regresa la lista sin los primeros n elementos de
-esta.\\
-\noindent Definiciones:
-\begin{itemize}
-\item[--] take:
-\begin{lstlisting}[language=Haskell]
-  take _ [] = []
-  take 0 (x:xs) = []
-  take n (x:xs) = x:take n-1 xs\end{lstlisting}
-\item[--] drop:
-\begin{lstlisting}[language=Haskell]
-  drop _ [] = []
-  drop 0 xs = xs
-  drop n (x:xs) = drop n-1 xs\end{lstlisting}
-\item[--] ++:
-\begin{lstlisting}[language=Haskell]
-  ++ [] _ = _
-  ++ (x:xs) l = x: xs ++ l\end{lstlisting}
-
-\item[--] map:
-\begin{lstlisting}[language=Haskell]
-  map _ [] = []
-  map f (x:xs) = f x : map f xs
-\end{lstlisting}
-
-
-\item[--] filter:
-\begin{lstlisting}[language=Haskell]
-  filter _ [] = []
-  filter p (x:xs)
-      | p x       = x : filter p xs
-      | otherwise = filter p xs\end{lstlisting}
-
-
-\item[--] concat:
-\begin{lstlisting}[language=Haskell]
-  concat [] = []
-  concat (xs:xss) = xs ++ concat xss\end{lstlisting}
-
-\end{itemize}
-\noindent Demuesrta o da un contraejemplo:
-\begin{itemize}
-\item
-  \begin{lstlisting}[language=Haskell]
-  take n xs ++ drop n xs = xs \end{lstlisting}
-	\begin{itemize}
-	\item Caso base: \\
-	\begin{lstlisting}[language=Haskell]
-  take n [] ++ drop n [] = []
-  [] ++ [] = []
-  [] = [] \end{lstlisting}
-
-	\item Hipótesis:
-	\begin{lstlisting}[language=Haskell]
-  take n xs ++ drop n xs = xs \end{lstlisting}
-
-  	\item Paso inductivo:
-  	\begin{itemize}
-  		\item[--] Por demostrar:
-	\begin{lstlisting}[language=Haskell]
-  take n (x:xs) ++ drop n (x:xs) = (x:xs)
-  (x : take n-1 xs) ++ (drop n-1 xs) = (x:xs)
-  -- Por definicion de take podemos sacar la x, entonces
-  x:(take n-1 xs ++ drop n-1 xs) = (x:xs)
-  -- Aplicamos la hipotesis de induccion
-  x:xs = x:xs  	\end{lstlisting}
-  	\end{itemize}
-	\end{itemize}
-
-\item
-  \begin{lstlisting}[language=Haskell]
-  take m . take n = take (min m n)\end{lstlisting}
+  \section{Función take}
+  En Haskell la función \texttt{take n} toma los primeros n elementos de una lista,
+  mientras que \texttt{drop n} regresa la lista sin los primeros n elementos de
+  esta.\\
+  \noindent Definiciones:
   \begin{itemize}
-  \item Caso base:
-  \begin{lstlisting}[language=Haskell]
-  take m . take n [] = take (min m n) []
-  take m . [] = take (min m n) []
-  [] = take (min m n) []
-  -- A partir de la lista vacia construimos el lado derecho.
-  take (min n m) [] = take (min n m) []
-  \end{lstlisting}
-  \item Hipótesis:
-  \begin{lstlisting}[language=Haskell]
-  take m . take n = take (min m n)
-  \end{lstlisting}
-  \item Paso Inductivo:\\
+  \item[--] take:
+    \begin{lstlisting}[language=Haskell]
+      take _ [] = []
+      take 0 (x:xs) = []
+      take n (x:xs) = x:take n-1 xs\end{lstlisting}
+    \item[--] drop:
+      \begin{lstlisting}[language=Haskell]
+        drop _ [] = []
+        drop 0 xs = xs
+        drop n (x:xs) = drop n-1 xs\end{lstlisting}
+      \item[--] ++:
+        \begin{lstlisting}[language=Haskell]
+          ++ [] _ = _
+          ++ (x:xs) l = x: xs ++ l\end{lstlisting}
 
-  	\begin{itemize}
-  	\item[--] Por demostrar
+        \item[--] map:
+          \begin{lstlisting}[language=Haskell]
+            map _ [] = []
+            map f (x:xs) = f x : map f xs
+          \end{lstlisting}
+
+
+        \item[--] filter:
+          \begin{lstlisting}[language=Haskell]
+            filter _ [] = []
+            filter p (x:xs)
+            | p x       = x : filter p xs
+            | otherwise = filter p xs\end{lstlisting}
+
+
+          \item[--] concat:
+            \begin{lstlisting}[language=Haskell]
+              concat [] = []
+              concat (xs:xss) = xs ++ concat xss\end{lstlisting}
+
+  \end{itemize}
+  \noindent Demuesrta o da un contraejemplo:
+  \begin{itemize}
+  \item
+    \begin{lstlisting}[language=Haskell]
+      take n xs ++ drop n xs = xs \end{lstlisting}
+    \begin{itemize}
+    \item Caso base: \\
+      \begin{lstlisting}[language=Haskell]
+        take n [] ++ drop n [] = []
+        [] ++ [] = []
+        [] = [] \end{lstlisting}
+
+    \item Hipótesis:
+      \begin{lstlisting}[language=Haskell]
+        take n xs ++ drop n xs = xs \end{lstlisting}
+
+    \item Paso inductivo:
+      \begin{itemize}
+      \item[--] Por demostrar:
+	\begin{lstlisting}[language=Haskell]
+          take n (x:xs) ++ drop n (x:xs) = (x:xs)
+          (x : take n-1 xs) ++ (drop n-1 xs) = (x:xs)
+          -- Por definicion de take podemos sacar la x, entonces
+          x:(take n-1 xs ++ drop n-1 xs) = (x:xs)
+          -- Aplicamos la hipotesis de induccion
+          x:xs = x:xs  	\end{lstlisting}
+      \end{itemize}
+    \end{itemize}
+
+  \item
+    \begin{lstlisting}[language=Haskell]
+      take m . take n = take (min m n)\end{lstlisting}
+    \begin{itemize}
+    \item Caso base:
+      \begin{lstlisting}[language=Haskell]
+        take m . take n [] = take (min m n) []
+        take m . [] = take (min m n) []
+        [] = take (min m n) []
+        -- A partir de la lista vacia construimos el lado derecho.
+        take (min n m) [] = take (min n m) []
+      \end{lstlisting}
+    \item Hipótesis:
+      \begin{lstlisting}[language=Haskell]
+        take m . take n = take (min m n)
+      \end{lstlisting}
+    \item Paso Inductivo:\\
+
+      \begin{itemize}
+      \item[--] Por demostrar
   	\begin{lstlisting}[language=Haskell]
-  	take m . take n = take (min m n)\end{lstlisting}
-  	\item[--] $n < m$:
+  	  take m . take n = take (min m n)\end{lstlisting}
+      \item[--] $n < m$:
   	\begin{lstlisting}[language=Haskell]
-  	take m . take n (x:xs) = take (min m n) (x:xs)
-  	-- Por la definicion de take
-  	take m . x : take n-1 xs = take (min m n) (x:xs)
-  	-- Volvemos a aplicar la definicion de take
-  	x: take m-1 . take n-1 xs = take (min m n) (x:xs)
-  	-- Aplicamos la hipotesis
-  	x: take (min n-1 m-1) xs = take (min m n) (x:xs)
-  	-- Aplicamos en sentido opuesto la definicion de take
-  	take (min n-1 m-1)+1 (x:xs) = take (min m n) (x:xs)
-  	--Como suponemos que n < m
-  	take n-1+1 (x:xs) = take n (x:xs)
-  	take n (x:xs) = take n (x:xs)\end{lstlisting}
-  	\item[--] $n > m$:
+  	  take m . take n (x:xs) = take (min m n) (x:xs)
+  	  -- Por la definicion de take
+  	  take m . x : take n-1 xs = take (min m n) (x:xs)
+  	  -- Volvemos a aplicar la definicion de take
+  	  x: take m-1 . take n-1 xs = take (min m n) (x:xs)
+  	  -- Aplicamos la hipotesis
+  	  x: take (min n-1 m-1) xs = take (min m n) (x:xs)
+  	  -- Aplicamos en sentido opuesto la definicion de take
+  	  take (min n-1 m-1)+1 (x:xs) = take (min m n) (x:xs)
+  	  --Como suponemos que n < m
+  	  take n-1+1 (x:xs) = take n (x:xs)
+  	  take n (x:xs) = take n (x:xs)\end{lstlisting}
+      \item[--] $n > m$:
   	\begin{lstlisting}[language=Haskell]
-  	take m . take n (x:xs) = take (min m n) (x:xs)
-  	-- Por la definicion de take
-  	take m . x : take n-1 xs = take (min m n) (x:xs)
-  	-- Volvemos a aplicar la definicion de take
-  	x: take m-1 . take n-1 xs = take (min m n) (x:xs)
-  	-- Aplicamos la hipotesis
-  	x: take (min n-1 m-1) xs = take (min m n) (x:xs)
-  	-- Aplicamos en sentido opuesto la definicion de take
-  	take (min n-1 m-1)+1 (x:xs) = take (min m n) (x:xs)
-  	--Como suponemos que n < m
-  	take m-1+1 (x:xs) = take m (x:xs)
-  	take m (x:xs) = take m (x:xs)
+  	  take m . take n (x:xs) = take (min m n) (x:xs)
+  	  -- Por la definicion de take
+  	  take m . x : take n-1 xs = take (min m n) (x:xs)
+  	  -- Volvemos a aplicar la definicion de take
+  	  x: take m-1 . take n-1 xs = take (min m n) (x:xs)
+  	  -- Aplicamos la hipotesis
+  	  x: take (min n-1 m-1) xs = take (min m n) (x:xs)
+  	  -- Aplicamos en sentido opuesto la definicion de take
+  	  take (min n-1 m-1)+1 (x:xs) = take (min m n) (x:xs)
+  	  --Como suponemos que n < m
+  	  take m-1+1 (x:xs) = take m (x:xs)
+  	  take m (x:xs) = take m (x:xs)
   	\end{lstlisting}
 
-  	\end{itemize}
-  \end{itemize}
+      \end{itemize}
+    \end{itemize}
 
-\item
-  \begin{lstlisting}[language=Haskell]
-    map f . take n = take n . map f\end{lstlisting}
-  \begin{itemize}
-  \item Caso base:
-\begin{lstlisting}[language=Haskell]
-    map f . take n [] = take n . map f []
-    map f [] = take []
-    [] = []\end{lstlisting}
-  \item Hipótesis:
-  \begin{lstlisting}[language=Haskell]
-    map f . take n xs= take n . map f xs\end{lstlisting}
-  \item Paso Inductivo:
-  	\begin{itemize}
-  	\item[--] Por demostrar
-\begin{lstlisting}[language=Haskell]
-  map f . take n (x:xs)= take n . map f (x:xs)
-  map f . x : take (n-1) xs = take n . map f (x:xs)
-  f x : map f . take (n-1) (xs) = take n . map f (x:xs)
-  -- Por hipotesis de induccion
-  f x : take n-1 . map f xs = take n . map f (x:xs)
-  -- Aplicamos take de derecha a izquierda
-  take n (f x : map f xs) = take n . map f (x:xs)
-  -- Aplicamos map de derecha a izquierda
-  take n . map f (x:xs) = take n . map f (x:xs)\end{lstlisting}
-\end{itemize}
-  \end{itemize}
-\item
-  \begin{lstlisting}[language=Haskell]
-    filter p . concat = concat . map (filter p)\end{lstlisting}
-    Esto es falso verdadero ya que en GCHi indica un error por el
-    operador (.); Sin embargo con $\$$ se cumple, por lo que vamos
-    a suponer que se usa $\$$ en lugar de (.) para solucionar el
-    ejercicio.
-\begin{itemize}
-  \item Caso base:
+  \item
+    \begin{lstlisting}[language=Haskell]
+      map f . take n = take n . map f\end{lstlisting}
+      \begin{itemize}
+      \item Caso base:
+        \begin{lstlisting}[language=Haskell]
+          map f . take n [] = take n . map f []
+          map f [] = take []
+          [] = []\end{lstlisting}
+      \item Hipótesis:
+        \begin{lstlisting}[language=Haskell]
+          map f . take n xs= take n . map f xs\end{lstlisting}
+        \item Paso Inductivo:
+  	  \begin{itemize}
+  	  \item[--] Por demostrar
+            \begin{lstlisting}[language=Haskell]
+              map f . take n (x:xs)= take n . map f (x:xs)
+              map f . x : take (n-1) xs = take n . map f (x:xs)
+              f x : map f . take (n-1) (xs) = take n . map f (x:xs)
+              -- Por hipotesis de induccion
+              f x : take n-1 . map f xs = take n . map f (x:xs)
+              -- Aplicamos take de derecha a izquierda
+              take n (f x : map f xs) = take n . map f (x:xs)
+              -- Aplicamos map de derecha a izquierda
+              take n . map f (x:xs) = take n . map f (x:xs)\end{lstlisting}
+          \end{itemize}
+      \end{itemize}
+    \item
+      \begin{lstlisting}[language=Haskell]
+        filter p . concat = concat . map (filter p)\end{lstlisting}
+      Esto es falso verdadero ya que en GCHi indica un error por el
+      operador (.); Sin embargo con $\$$ se cumple, por lo que vamos
+      a suponer que se usa $\$$ en lugar de (.) para solucionar el
+      ejercicio.
+      \begin{itemize}
+      \item Caso base:
 	\begin{lstlisting}[language=Haskell]
-    filter p $ concat [] = concat $ map (filter p) []
-    filter p $ [] = concat $ []
-    [] = []\end{lstlisting}
-  \item Hipótesis:
-  \begin{lstlisting}[language=Haskell]
-  filter p $ concat xss= concat $ map (filter p) xss\end{lstlisting}
-  \item Paso Inductivo:
-  \begin{lstlisting}[language=Haskell]
-filter p $ concat (xs:xss) = concat $ map (filter p) (xs:xss)
-filter p $ xs ++ concat xss = concat $ map (filter p) (xs:xss)
--- La demostracion de que el filter distribuye se deja
--- como ejercicio al lector xD. Suponemos que distribuye
-filter p xs ++ filter p $ concat xss = concat $ map (filter p) (xs:xss)
--- Por hipotesis de induccion
-filter p xs ++ concat $ map (filter p) xss = concat $ map (filter p) (xs:xss)
--- Concat al reves
-concat $ filter p xs : map (filter p) xss = concat $ map (filter p) (xs:xss)
--- Map al reves
-concat $ map (filter p) (xs:xss) = concat $ map (filter p) (xs:xss)
-
-    \end{lstlisting}
-  	\begin{itemize}
-  	\item[--] Por demostrar
-  	\end{itemize}
+          filter p $ concat [] = concat $ map (filter p) []
+          filter p $ [] = concat $ []
+          [] = []\end{lstlisting}
+      \item Hipótesis:
+        \begin{lstlisting}[language=Haskell]
+          filter p $ concat xss= concat $ map (filter p) xss\end{lstlisting}
+        \item Paso Inductivo:
+          \begin{lstlisting}[language=Haskell]
+            filter p $ concat (xs:xss) = concat $ map (filter p) (xs:xss)
+            filter p $ xs ++ concat xss = concat $ map (filter p) (xs:xss)
+            -- La demostracion de que el filter distribuye se deja
+            -- como ejercicio al lector xD. Suponemos que distribuye
+            filter p xs ++ filter p $ concat xss = concat $ map (filter p) (xs:xss)
+            -- Por hipotesis de induccion
+            filter p xs ++ concat $ map (filter p) xss = concat $ map (filter p) (xs:xss)
+            -- Concat al reves
+            concat $ filter p xs : map (filter p) xss = concat $ map (filter p) (xs:xss)
+            -- Map al reves
+            concat $ map (filter p) (xs:xss) = concat $ map (filter p) (xs:xss)
+          \end{lstlisting}
+  	  \begin{itemize}
+  	  \item[--] Por demostrar
+  	  \end{itemize}
+      \end{itemize}
   \end{itemize}
-\end{itemize}
 
 
-\section{Función map}
-Consideremos la siguiente afirmación
-\begin{lstlisting}[language=Haskell]
-  map (f . g) xs = map f $ map g xs
-\end{lstlisting}
-\begin{enumerate}[(a)]
-\item ¿Se cumple para cualquier xs? Si es cierta bosqueja la demostración, en
-  caso contrario, ¿Qué condiciones se deben pedir sobre xs para que sea cierta?
-\item Intuitivamente, ¿Qué lado de la igualdad resulta más eficiente? ¿Esto es
-  cierto incluso en lenguajes con evaluación perezosa? Justifica tu respuesta.
-\end{enumerate}
+  \section{Función map}
+  Consideremos la siguiente afirmación
+  \begin{lstlisting}[language=Haskell]
+    map (f . g) xs = map f $ map g xs
+  \end{lstlisting}
+  \begin{enumerate}[(a)]
+  \item ¿Se cumple para cualquier xs? Si es cierta bosqueja la demostración, en
+    caso contrario, ¿Qué condiciones se deben pedir sobre xs para que sea cierta?
+
+    Sospechamos fuertemente que si se cumple para cualquier xs, pues hicimos
+    varias pruebas, pero no demostramos para todos los tipos.
+
+    \begin{lstlisting}[language=Haskell]
+      map (f . g) xs = map f $ map g xs
+    \end{lstlisting}
+      \begin{itemize}
+      \item Caso base:
+        \begin{lstlisting}[language=Haskell]
+          map (f . g) [] = map f $ map g []
+          map f (map g [])
+          map f $ map g []
+        \end{lstlisting}
+      \item Hipótesis
+        \begin{lstlisting}[language=Haskell]
+          map (f . g) xs = map f $ map g xs
+        \end{lstlisting}
+        \item Paso inductivo
+          \begin{itemize}
+          \item [--] Por demostrar
+            \begin{lstlisting}[language=Haskell]
+              map (f . g) (x:xs) = map f $ map g (x:xs)
+            \end{lstlisting}
+          \end{itemize}
+          \begin{lstlisting}[language=Haskell]
+            map (f . g) (x:xs) = map f $ map g (x:xs)
+            map f (map g  (x:xs)) = map f $ map g (x:xs)
+            map f (g x : map xs) = map f $ map g (x:xs)
+            f (g x) : map f (map g xs) = map f $ map g (x:xs)
+            -- Hipotesis
+            f (g x) : map f $ map g xs = map f $ map g (x:xs)
+            map f (g x) : $ map g xs = map f $ map g (x:xs)
+            map f $ map g (x:xs) = map f $ map g (x:xs)
+          \end{lstlisting}
+      \end{itemize}    
+    
+  \item Intuitivamente, ¿Qué lado de la igualdad resulta más eficiente? ¿Esto es
+    cierto incluso en lenguajes con evaluación perezosa? Justifica tu respuesta.
+
+    Intuitivamente, el lado derecho resulta más eficiente, pues solo tendríamos
+    que resolver:
+    \begin{lstlisting}[language=Haskell]
+      map g xs
+    \end{lstlisting}
+    Y poder pasar el resultado, ya que hacer la composición del otro lado,
+    intuitivamente no se ve tan eficiente.
+
+    Para el caso de lenguajes con evaluación perezosa no creemos que sea cierto,
+    pues le combiene al lenguaje hacer la composición para ver que pueda proceder
+    a aplicarla y posteriormente aplicarla, ya que un lenguaje con evaluación
+    perezosa no hace nada hasta que tenga que hacerlo.
+  \end{enumerate}
 
 \end{document}
