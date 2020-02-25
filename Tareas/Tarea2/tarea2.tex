@@ -188,7 +188,46 @@ el \texttt{Prelude}, de Haskell.
 \section{Función take}
 En Haskell la función \texttt{take n} toma los primeros n elementos de una lista,
 mientras que \texttt{drop n} regresa la lista sin los primeros n elementos de
-esta. Demuesrta o da un contraejemplo:
+esta.\\
+\noindent Definiciones:
+\begin{itemize}
+\item[--] take:
+\begin{lstlisting}[language=Haskell]
+  take _ [] = []
+  take 0 (x:xs) = []
+  take n (x:xs) = x:take n-1 xs\end{lstlisting}
+\item[--] drop:
+\begin{lstlisting}[language=Haskell]
+  drop _ [] = []
+  drop 0 xs = xs
+  drop n (x:xs) = drop n-1 xs\end{lstlisting}
+\item[--] ++:
+\begin{lstlisting}[language=Haskell]
+  ++ [] _ = _
+  ++ (x:xs) l = x: xs ++ l\end{lstlisting}
+
+\item[--] map:
+\begin{lstlisting}[language=Haskell]
+  map _ [] = []
+  map f (x:xs) = f x : map f xs
+\end{lstlisting}
+
+
+\item[--] filter:
+\begin{lstlisting}[language=Haskell]
+  filter _ [] = []
+  filter p (x:xs)
+      | p x       = x : filter p xs
+      | otherwise = filter p xs\end{lstlisting}
+
+
+\item[--] concat:
+\begin{lstlisting}[language=Haskell]
+  concat [] = []
+  concat (xs:xss) = xs ++ concat xss\end{lstlisting}
+
+\end{itemize}
+\noindent Demuesrta o da un contraejemplo:
 \begin{itemize}
 \item
   \begin{lstlisting}[language=Haskell]
@@ -219,37 +258,117 @@ esta. Demuesrta o da un contraejemplo:
 
 \item
   \begin{lstlisting}[language=Haskell]
-    take m . take n = take (min m n)
-  \end{lstlisting}
+  take m . take n = take (min m n)\end{lstlisting}
   \begin{itemize}
   \item Caso base:
+  \begin{lstlisting}[language=Haskell]
+  take m . take n [] = take (min m n) []
+  take m . [] = take (min m n) []
+  [] = take (min m n) []
+  -- A partir de la lista vacia construimos el lado derecho.
+  take (min n m) [] = take (min n m) []
+  \end{lstlisting}
   \item Hipótesis:
-  \item Paso Inductivo:
+  \begin{lstlisting}[language=Haskell]
+  take m . take n = take (min m n)
+  \end{lstlisting}
+  \item Paso Inductivo:\\
+
   	\begin{itemize}
   	\item[--] Por demostrar
+  	\begin{lstlisting}[language=Haskell]
+  	take m . take n = take (min m n)\end{lstlisting}
+  	\item[--] $n < m$:
+  	\begin{lstlisting}[language=Haskell]
+  	take m . take n (x:xs) = take (min m n) (x:xs)
+  	-- Por la definicion de take
+  	take m . x : take n-1 xs = take (min m n) (x:xs)
+  	-- Volvemos a aplicar la definicion de take
+  	x: take m-1 . take n-1 xs = take (min m n) (x:xs)
+  	-- Aplicamos la hipotesis
+  	x: take (min n-1 m-1) xs = take (min m n) (x:xs)
+  	-- Aplicamos en sentido opuesto la definicion de take
+  	take (min n-1 m-1)+1 (x:xs) = take (min m n) (x:xs)
+  	--Como suponemos que n < m
+  	take n-1+1 (x:xs) = take n (x:xs)
+  	take n (x:xs) = take n (x:xs)\end{lstlisting}
+  	\item[--] $n > m$:
+  	\begin{lstlisting}[language=Haskell]
+  	take m . take n (x:xs) = take (min m n) (x:xs)
+  	-- Por la definicion de take
+  	take m . x : take n-1 xs = take (min m n) (x:xs)
+  	-- Volvemos a aplicar la definicion de take
+  	x: take m-1 . take n-1 xs = take (min m n) (x:xs)
+  	-- Aplicamos la hipotesis
+  	x: take (min n-1 m-1) xs = take (min m n) (x:xs)
+  	-- Aplicamos en sentido opuesto la definicion de take
+  	take (min n-1 m-1)+1 (x:xs) = take (min m n) (x:xs)
+  	--Como suponemos que n < m
+  	take m-1+1 (x:xs) = take m (x:xs)
+  	take m (x:xs) = take m (x:xs)
+  	\end{lstlisting}
+
   	\end{itemize}
   \end{itemize}
 
 \item
   \begin{lstlisting}[language=Haskell]
-    map f . take n = take n . map f
-  \end{lstlisting}
+    map f . take n = take n . map f\end{lstlisting}
   \begin{itemize}
   \item Caso base:
+\begin{lstlisting}[language=Haskell]
+    map f . take n [] = take n . map f []
+    map f [] = take []
+    [] = []\end{lstlisting}
   \item Hipótesis:
+  \begin{lstlisting}[language=Haskell]
+    map f . take n xs= take n . map f xs\end{lstlisting}
   \item Paso Inductivo:
   	\begin{itemize}
   	\item[--] Por demostrar
-  	\end{itemize}
+\begin{lstlisting}[language=Haskell]
+  map f . take n (x:xs)= take n . map f (x:xs)
+  map f . x : take (n-1) xs = take n . map f (x:xs)
+  f x : map f . take (n-1) (xs) = take n . map f (x:xs)
+  -- Por hipotesis de induccion
+  f x : take n-1 . map f xs = take n . map f (x:xs)
+  -- Aplicamos take de derecha a izquierda
+  take n (f x : map f xs) = take n . map f (x:xs)
+  -- Aplicamos map de derecha a izquierda
+  take n . map f (x:xs) = take n . map f (x:xs)\end{lstlisting}
+\end{itemize}
   \end{itemize}
 \item
   \begin{lstlisting}[language=Haskell]
-    filter p . concat = concat . map (filter p)
-  \end{lstlisting}
+    filter p . concat = concat . map (filter p)\end{lstlisting}
+    Esto es falso verdadero ya que en GCHi indica un error por el
+    operador (.); Sin embargo con $\$$ se cumple, por lo que vamos
+    a suponer que se usa $\$$ en lugar de (.) para solucionar el
+    ejercicio.
 \begin{itemize}
   \item Caso base:
+	\begin{lstlisting}[language=Haskell]
+    filter p $ concat [] = concat $ map (filter p) []
+    filter p $ [] = concat $ []
+    [] = []\end{lstlisting}
   \item Hipótesis:
+  \begin{lstlisting}[language=Haskell]
+  filter p $ concat xss= concat $ map (filter p) xss\end{lstlisting}
   \item Paso Inductivo:
+  \begin{lstlisting}[language=Haskell]
+filter p $ concat (xs:xss) = concat $ map (filter p) (xs:xss)
+filter p $ xs ++ concat xss = concat $ map (filter p) (xs:xss)
+-- La demostracion de que el filter distribuye se deja
+-- como ejercicio al lector xD. Suponemos que distribuye
+filter p xs ++ filter p $ concat xss = concat $ map (filter p) (xs:xss)
+-- Por hipotesis de induccion
+filter p xs ++ concat $ map (filter p) xss = concat $ map (filter p) (xs:xss)
+-- Concat al reves
+concat $ filter p xs : map (filter p) xss = concat $ map (filter p) (xs:xss)
+-- Map al reves
+concat $ map (filter p) (xs:xss) = concat $ map (filter p) (xs:xss)
+
+    \end{lstlisting}
   	\begin{itemize}
   	\item[--] Por demostrar
   	\end{itemize}
