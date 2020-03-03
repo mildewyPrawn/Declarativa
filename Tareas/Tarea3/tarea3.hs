@@ -53,23 +53,22 @@ foldi f q i = f (foldi f q (pred i))
 -- | sumq. Función que recibe un entero n y regresa la suma de los cuadrados de
 -- los primeros n números
 sumq :: Int -> Int
-sumq n = foldr (\x y -> x+y) 0 (map (^2) [0..n])
+sumq n = foldl (\x y -> x+y) 0 (map (^2) [0..n])
 
 -- | remove. Función que toma dos listas y elimina todos los elementos de la
 -- segunda que aparecen en la primera.
 remove :: (Eq a) => [a] -> [a] -> [a]
-remove = error ""
+remove xs = myFilter (`notElem` xs)
 
 -- | remdups. Elimina los elementos adyacenes duplicados en una lista.
 remdups :: (Eq a) => [a] -> [a]
-remdups = error ""
+remdups xs = error ""
 
 -- | rotate. Produce todas las posibles rotaciones de una lista.
 rotate :: [a] -> [[a]]
 rotate [] = []
 rotate xs = scanl (\x y -> shift x++y ) xs (addF $ (length xs) - 1)
--- TODO: Falta hacer una lsita de listas del tamaño adecuado
--- rotate xs = foldl (shift xs) xs []
+
 ---------------------------------------------------------------------------------
 --------                         CUARTA PARTE                           ---------
 ---------------------------------------------------------------------------------
@@ -93,7 +92,11 @@ shift (x:xs) = foldl (\x y -> y:x) [x] (myReverse xs) -- DUDA
 fixpoint f x = f (fixpoint f) x
 
 -- | addF. Función que crea una lista de n listas vacías.
+addF :: Int -> [[a]]
 addF = fixpoint (\ff n -> if n == 0 then [] else [[]] ++ ff(n-1))
+
+redi [x] = [x]
+redi (x:xs) = if x == head xs then redi xs else x:redi xs
 
 ---------------------------------------------------------------------------------
 --------                           PRUEBAS                               --------
