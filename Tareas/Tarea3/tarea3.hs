@@ -9,6 +9,8 @@
 
 module Tarea3 where
 
+import Data.Function
+
 ---------------------------------------------------------------------------------
 --------                        PRIMERA PARTE                           ---------
 ---------------------------------------------------------------------------------
@@ -65,6 +67,8 @@ remdups = error ""
 -- | rotate. Produce todas las posibles rotaciones de una lista.
 rotate :: [a] -> [[a]]
 rotate [] = []
+rotate xs = scanl (\x y -> shift x++y ) xs (addF $ (length xs) - 1)
+-- TODO: Falta hacer una lsita de listas del tamaño adecuado
 -- rotate xs = foldl (shift xs) xs []
 ---------------------------------------------------------------------------------
 --------                         CUARTA PARTE                           ---------
@@ -77,13 +81,22 @@ rotate [] = []
 -}
 
 
---------------------------------------------------------------------------------
---------                          AUXILIARES                            --------
---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+--------                          AUXILIARES                             --------
+---------------------------------------------------------------------------------
 
 -- | shift. Función auxiliar que calcula una rotación de una lista.
 shift :: [a] -> [a]
-shift (x:xs) = foldl (\x y -> y:x) [x] (reverse xs) -- DUDA
+shift (x:xs) = foldl (\x y -> y:x) [x] (myReverse xs) -- DUDA
 
-shiftN [] = []
-shiftN (x:xs) = xs++[x]
+-- | fixpoint. FIXPOINT
+fixpoint f x = f (fixpoint f) x
+
+-- | addF. Función que crea una lista de n listas vacías.
+addF = fixpoint (\ff n -> if n == 0 then [] else [[]] ++ ff(n-1))
+
+---------------------------------------------------------------------------------
+--------                           PRUEBAS                               --------
+---------------------------------------------------------------------------------
+rotate1 = rotate [1,2,3]
+-- regresa: [[1, 2, 3], [2, 3, 1], [3, 1, 2]]
