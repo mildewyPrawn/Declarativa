@@ -31,7 +31,7 @@ myReverse xs = foldr (\b g x -> g (b : x)) id xs []
 -- | myFilter. Función 'filter' como instancia de foldr.
 myFilter :: (a -> Bool) -> [a] -> [a]
 myFilter _ [] = []
-myFilter p (x:xs) = foldr (\x xs -> if (p x) then x:xs else xs) [] xs
+myFilter p xs = foldr (\x xs -> if (p x) then x:xs else xs) [] xs
 
 -- | myInits. Función 'inits' como instancia de foldr
 myInits :: [a] -> [[a]]
