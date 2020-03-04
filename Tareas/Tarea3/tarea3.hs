@@ -10,6 +10,7 @@
 module Tarea3 where
 
 import Data.Function
+import Data.Maybe
 
 ---------------------------------------------------------------------------------
 --------                        PRIMERA PARTE                           ---------
@@ -62,7 +63,7 @@ remove xs = myFilter (`notElem` xs)
 
 -- | remdups. Elimina los elementos adyacenes duplicados en una lista.
 remdups :: (Eq a) => [a] -> [a]
-remdups xs = error ""
+remdups xs = foldl joinL [] xs
 
 -- | rotate. Produce todas las posibles rotaciones de una lista.
 rotate :: [a] -> [[a]]
@@ -95,11 +96,15 @@ fixpoint f x = f (fixpoint f) x
 addF :: Int -> [[a]]
 addF = fixpoint (\ff n -> if n == 0 then [] else [[]] ++ ff(n-1))
 
-redi [x] = [x]
-redi (x:xs) = if x == head xs then redi xs else x:redi xs
+-- | joinL. Función que concatena un elemento a una lista.
+joinL xs e = (\l x -> if l == [] then [x] else if last l == x then l else l++[x])
+             xs e
 
 ---------------------------------------------------------------------------------
 --------                           PRUEBAS                               --------
 ---------------------------------------------------------------------------------
 rotate1 = rotate [1,2,3]
 -- regresa: [[1, 2, 3], [2, 3, 1], [3, 1, 2]]
+
+remdups1 = remdups [1,2,2,3,3,3,1,1]
+-- regresa: [1,2,3,1]
