@@ -36,7 +36,7 @@ myFilter p xs = foldr (\x xs -> if (p x) then x:xs else xs) [] xs
 
 -- | myInits. Función 'inits' como instancia de foldr
 myInits :: [a] -> [[a]]
-myInits = foldr (\x y -> [] : (map (x:) y) ) [[]]
+myInits = foldr (\x y -> [] : (map (x:) y )) [[]]
 
 ---------------------------------------------------------------------------------
 --------                        SEGUNDA PARTE                           ---------
@@ -63,22 +63,25 @@ remove xs = myFilter (`notElem` xs)
 
 -- | remdups. Elimina los elementos adyacenes duplicados en una lista.
 remdups :: (Eq a) => [a] -> [a]
-remdups xs = foldl joinL [] xs
+remdups xs = foldl (\l x -> if l == []
+                            then [x]
+                            else if last l == x then l else l++[x]) [] xs
 
 -- | rotate. Produce todas las posibles rotaciones de una lista.
 rotate :: [a] -> [[a]]
 rotate [] = []
-rotate xs = scanl (\x y -> shift x++y ) xs (addF $ (length xs) - 1)
+rotate xs = scanl (\x y -> shift x++y ) xs
+            (fixpoint (\ff n -> if n == 0
+                                then []
+                                else [[]] ++ ff(n-1)) $ (length xs) - 1)
 
 ---------------------------------------------------------------------------------
 --------                         CUARTA PARTE                           ---------
 ---------------------------------------------------------------------------------
 
---x '(\x xs -> xs)'
-{-
-> foldr f z []     = z
-> foldr f z (x:xs) = x `f` foldr f z xs
--}
+unmerge :: (Ord a) => [a] -> [([a],[a])]
+unmerge = error "No sé que hace unmerge \129312"
+-- unmerge xs = [ (ys,zs) | merge ys zs == xs]
 
 
 ---------------------------------------------------------------------------------
@@ -91,14 +94,6 @@ shift (x:xs) = foldl (\x y -> y:x) [x] (myReverse xs) -- DUDA
 
 -- | fixpoint. FIXPOINT
 fixpoint f x = f (fixpoint f) x
-
--- | addF. Función que crea una lista de n listas vacías.
-addF :: Int -> [[a]]
-addF = fixpoint (\ff n -> if n == 0 then [] else [[]] ++ ff(n-1))
-
--- | joinL. Función que concatena un elemento a una lista.
-joinL xs e = (\l x -> if l == [] then [x] else if last l == x then l else l++[x])
-             xs e
 
 ---------------------------------------------------------------------------------
 --------                           PRUEBAS                               --------
