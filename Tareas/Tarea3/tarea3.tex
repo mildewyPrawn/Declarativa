@@ -1,0 +1,158 @@
+\documentclass[spanish,12pt,letterpaper]{article}
+
+\usepackage[english]{babel}
+\usepackage[table]{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{authblk}
+\usepackage{csquotes}
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage{forest}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\geometry{
+  a4paper,
+  total={170mm,257mm},
+  left=20mm,
+  top=20mm,
+}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+  backgroundcolor=\color{backcolour},
+  commentstyle=\color{codegreen},
+  keywordstyle=\color{orange},
+  numberstyle=\tiny\color{codegray},
+  stringstyle=\color{codepurple},
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  keepspaces=true,
+  numbers=right,
+  numbersep=5pt,
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\title{Programación declarativa. Tarea 3\\
+  \Huge{Bringing you into the fold}}
+\author{Juan Alfonso Garduño Solís\\
+  Emiliano Galeana Araujo}
+\affil{Facultad de ciencias, UNAM}
+\date{Fecha de entrega: Jueves 12 de marzo de 2020}
+
+\begin{document}
+
+\maketitle
+
+\section{Propiedades}
+\begin{enumerate}[(a)]
+\item
+  \begin{lstlisting}[language=Haskell]
+    foldr f e . map g = foldr (f . g) e
+  \end{lstlisting}
+  
+\item
+  \begin{lstlisting}[language=Haskell]
+    foldl f e xs = foldr (flip f) e (reverse xs)
+  \end{lstlisting}
+  
+\item
+  \begin{lstlisting}[language=Haskell]
+    foldr f e (xs ++ ys) = foldr f (foldr f e ys) xs 
+  \end{lstlisting}
+  
+\end{enumerate}
+
+\section{Árboles Binarios}
+
+Consideramos el siguiente tipo de dato algebráico en Haskell para definir árboles
+binarios.
+\begin{lstlisting}[language=Haskell]
+  data Tree a = Void | Node (Tree a) a (Tree a)
+\end{lstlisting}
+
+Y la función \texttt{foldT} que define el operador de plegado para la estructura
+\texttt{Tree}, definido como sigue:
+
+\begin{lstlisting}[language=Haskell]
+  foldT :: (b -> a -> b -> b) -> b -> Tree a -> b
+  foldT _ v Void = v
+  foldT f v (Node t1 r t2) = f t1' r t2'
+    where t1' = foldT f v t1
+          t2' = foldT f v t2
+\end{lstlisting}
+
+\begin{enumerate}
+\item Da en términos de una función \texttt{h} el patrón de encapsulado por el
+  operador \texttt{foldT}.
+  
+\item Enuncia y demuestra la propiedad Universal del operador \texttt{foldT},
+  basándose en la Propiedad Universal vista en clase sobre el operador
+  \textcolor{orange}{foldr} de listas.
+\end{enumerate}
+
+\section{Función \texttt{scanr}}
+Calcula una definición eficiente para \textcolor{orange}{scanr} partiendo de la
+siguiente:
+
+\begin{lstlisting}[language=Haskell]
+  scanr r f e = map (foldr f e) . tails
+\end{lstlisting}
+
+\section{Función \texttt{cp}}
+Considera la siguiente definición de la función \texttt{cp} que calcula el
+producto cartesiano.
+
+\begin{lstlisting}[language=Haskell]
+  cp :: [[a]] -> [[a]]
+  cp = foldr f e
+\end{lstlisting}
+
+\begin{enumerate}
+\item En la definición anterior, ¿Quiénes son \texttt{f} y \texttt{e}?
+\item Dada la siguiente ecuación
+  \begin{lstlisting}[language=Haskell]
+    length . cp = product . map length
+  \end{lstlisting}
+  en donde \textcolor{orange}{length} calcula la longitud de una lista y
+  \textcolor{orange}{product} regresa el resultado de la multiplicación de todos
+  los elementos de una lista. Demuestra que la ecuación es cierta, para esto es
+  necesario reescribir ambos lados de la ecuación como instancias de \texttt
+  {orange}{foldr} y ver que son idénticas.
+\end{enumerate}
+
+\section{Parte extra}
+En una granja con mucho folklore se discute acerca del siguiente
+razonamiento.  El día que nace un becerro, cualquiera lo puede cargar con
+facilidad.  Y los becerros no crecen demasiado en un día,  entonces si puedes
+cargar a un becerro un día,  lo puedes cargar también al día siguiente,
+siguiendo con este razonamiento entonces también debería serte posible cargar al
+becerro el día siguiente y el siguiente y así sucesivamente. Pero después de un
+año, el becerro se va a convertir en una vaca adulta de 1000kg algo que
+claramente ya no puedes cargar.
+
+Este es un razonamiento inductivo, la base es el día que el becerro nace,
+suponemos cierto que se puede cargar en el día \textit{n} de vida del becerro y
+si se puede cargar ese día, como no crece mucho en un día entonces también se
+puede cargar en el día \textit{n+ 1}.  Pero claramente la conclusión es falsa.
+
+Para este ejercicio hay dos posibles soluciones,  la primera es indicar en donde
+está el error en el razonamiento inductivo o la segunda es cargar una vaca adulta
+así demostrando que el argumento es correcto.
+
+\end{document}
