@@ -10,7 +10,6 @@
 module Tarea3 where
 
 import Data.Function
-import Data.Maybe
 
 ---------------------------------------------------------------------------------
 --------                        PRIMERA PARTE                           ---------
@@ -46,6 +45,20 @@ myInits = foldr (\x y -> [] : (map (x:) y )) [[]]
 foldi :: (a -> a) -> a -> Int -> a
 foldi f q 0 = q
 foldi f q i = f (foldi f q (pred i))
+
+-- | add. Función que suma dos números como instancia de foldi.
+add :: Num a => a -> Int -> a
+add a i = foldi (\x -> x+1) a i
+
+-- | mult. Función que multiplica dos números como instancia de foldi.
+mult :: Num a => a -> Int -> a
+mult a i = foldi (+a) 0 i
+
+-- | expt. Función que aplica la operación 'exponenciacion' de dos números a b
+-- de la forma a^b. Como instancia de foldi.
+expt :: Num a => a -> Int -> a
+expt a i = foldi (*a) 1 i
+
 
 ---------------------------------------------------------------------------------
 --------                        TERCERA PARTE                           ---------
@@ -83,7 +96,6 @@ unmerge :: (Ord a) => [a] -> [([a],[a])]
 unmerge = error "No sé que hace unmerge \129312"
 -- unmerge xs = [ (ys,zs) | merge ys zs == xs]
 
-
 ---------------------------------------------------------------------------------
 --------                          AUXILIARES                             --------
 ---------------------------------------------------------------------------------
@@ -98,6 +110,10 @@ fixpoint f x = f (fixpoint f) x
 ---------------------------------------------------------------------------------
 --------                           PRUEBAS                               --------
 ---------------------------------------------------------------------------------
+
+remove1 = remove "first" "second"
+-- regresa: "econd"
+
 rotate1 = rotate [1,2,3]
 -- regresa: [[1, 2, 3], [2, 3, 1], [3, 1, 2]]
 
