@@ -92,8 +92,9 @@ rotate xs = scanl (\x y -> shift x++y ) xs
 ---------------------------------------------------------------------------------
 
 unmerge :: (Ord a) => [a] -> [([a],[a])]
-unmerge = error "No sé que hace unmerge \129312"
--- unmerge xs = [ (ys,zs) | merge ys zs == xs]
+-- unmerge = error "No sé que hace unmerge \129312"
+-- unmerge xs = [ (ys,zs) | merge ys zs == xs, ]
+unmerge xs = separa [] xs
 
 ---------------------------------------------------------------------------------
 --------                          AUXILIARES                             --------
@@ -105,6 +106,11 @@ shift (x:xs) = foldl (\x y -> y:x) [x] (myReverse xs) -- DUDA
 
 -- | fixpoint. FIXPOINT
 fixpoint f x = f (fixpoint f) x
+
+-- | separa. Función que va separando una lista elemento por elemento.
+separa :: [a] -> [a] -> [([a], [a])]
+separa l [] = [(l, [])]
+separa l (x:xs)  = [(l, (x:xs))] ++ (separa (l++[x]) xs)
 
 ---------------------------------------------------------------------------------
 --------                           PRUEBAS                               --------
