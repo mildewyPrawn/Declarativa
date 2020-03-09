@@ -390,35 +390,35 @@ Donde, \texttt{double} se define de la siguiente manera:
     \begin{lstlisting}[language=Haskell]
       map (f . g) xs = map f $ map g xs
     \end{lstlisting}
+    \begin{itemize}
+    \item Caso base:
+      \begin{lstlisting}[language=Haskell]
+        map (f . g) [] = map f $ map g []
+        map f (map g [])
+        map f $ map g []
+      \end{lstlisting}
+    \item Hipótesis
+      \begin{lstlisting}[language=Haskell]
+        map (f . g) xs = map f $ map g xs
+      \end{lstlisting}
+    \item Paso inductivo
       \begin{itemize}
-      \item Caso base:
+      \item [--] Por demostrar
         \begin{lstlisting}[language=Haskell]
-          map (f . g) [] = map f $ map g []
-          map f (map g [])
-          map f $ map g []
+          map (f . g) (x:xs) = map f $ map g (x:xs)
         \end{lstlisting}
-      \item Hipótesis
-        \begin{lstlisting}[language=Haskell]
-          map (f . g) xs = map f $ map g xs
-        \end{lstlisting}
-        \item Paso inductivo
-          \begin{itemize}
-          \item [--] Por demostrar
-            \begin{lstlisting}[language=Haskell]
-              map (f . g) (x:xs) = map f $ map g (x:xs)
-            \end{lstlisting}
-          \end{itemize}
-          \begin{lstlisting}[language=Haskell]
-            map (f . g) (x:xs) = map f $ map g (x:xs)
-            map f (map g  (x:xs)) = map f $ map g (x:xs)
-            map f (g x : map xs) = map f $ map g (x:xs)
-            f (g x) : map f (map g xs) = map f $ map g (x:xs)
-            -- Hipotesis
-            f (g x) : map f $ map g xs = map f $ map g (x:xs)
-            map f (g x) : $ map g xs = map f $ map g (x:xs)
-            map f $ map g (x:xs) = map f $ map g (x:xs)
-          \end{lstlisting}
-      \end{itemize}    
+      \end{itemize}
+      \begin{lstlisting}[language=Haskell]
+        map (f . g) (x:xs) = map f $ map g (x:xs)
+        map f (map g  (x:xs)) = map f $ map g (x:xs)
+        map f (g x : map xs) = map f $ map g (x:xs)
+        f (g x) : map f (map g xs) = map f $ map g (x:xs)
+        -- Hipotesis
+        f (g x) : map f $ map g xs = map f $ map g (x:xs)
+        map f (g x) : $ map g xs = map f $ map g (x:xs)
+        map f $ map g (x:xs) = map f $ map g (x:xs)
+      \end{lstlisting}
+    \end{itemize}    
     
   \item Intuitivamente, ¿Qué lado de la igualdad resulta más eficiente? ¿Esto es
     cierto incluso en lenguajes con evaluación perezosa? Justifica tu respuesta.
