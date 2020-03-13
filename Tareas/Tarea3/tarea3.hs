@@ -10,14 +10,14 @@
 module Tarea3 where
 
 import Data.Function
-
+import Data.List
 ---------------------------------------------------------------------------------
 --------                        PRIMERA PARTE                           ---------
 ---------------------------------------------------------------------------------
 
 -- | myConcat. Función 'concat' como instancia de foldr.
 myConcat :: [[a]] -> [a]
-myConcat = foldr (++) [] 
+myConcat = foldr (++) []
 
 -- | myMinimum. Función 'minimum' como instancia de foldr.
 myMinimum :: (Ord a) => [a] -> a
@@ -91,10 +91,22 @@ rotate xs = scanl (\x y -> shift x++y ) xs
 --------                         CUARTA PARTE                           ---------
 ---------------------------------------------------------------------------------
 
+
+
+merge :: (Ord a) => [a] -> [a] -> [a]
+merge xs [] = xs
+merge [] xs = xs
+merge (x:xs) (y:ys) =  if x<y
+                        then (x: merge xs (y:ys))
+                        else (y: merge (x:xs) ys)
+heads :: [a] -> [a] -> [[a]]
+heads l [] = [[]]
+heads l (x:xs) = (l++[x]) : heads (l++[x]) xs
+
 unmerge :: (Ord a) => [a] -> [([a],[a])]
--- unmerge = error "No sé que hace unmerge \129312"
--- unmerge xs = [ (ys,zs) | merge ys zs == xs, ]
-unmerge xs = separa [] xs
+unmerge xs = [(ys,zs) | zs <- tails xs,
+                        ys <- heads [] xs,
+                        merge ys zs == xs]
 
 ---------------------------------------------------------------------------------
 --------                          AUXILIARES                             --------
