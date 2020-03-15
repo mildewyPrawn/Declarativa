@@ -65,6 +65,7 @@
   \begin{lstlisting}[language=Haskell]
     foldr f e . map g = foldr (f . g) e
   \end{lstlisting}
+%% https://books.google.com.mx/books?id=Y3GqCAAAQBAJ&pg=PA6&lpg=PA6&dq=foldr+f+e+.+map+g+%3D+foldr+(+f+.+g+)+e&source=bl&ots=4C4WZDWoXy&sig=ACfU3U1gr3XgQEkZ0Lh5VTFYxiWEzRn27w&hl=es&sa=X&ved=2ahUKEwjhypOJtZDoAhURXKwKHa0HBDcQ6AEwAHoECAkQAQ#v=onepage&q=foldr%20f%20e%20.%20map%20g%20%3D%20foldr%20(%20f%20.%20g%20)%20e&f=false
   
 \item
   \begin{lstlisting}[language=Haskell]
@@ -93,8 +94,8 @@ Y la función \texttt{foldT} que define el operador de plegado para la estructur
   foldT :: (b -> a -> b -> b) -> b -> Tree a -> b
   foldT _ v Void = v
   foldT f v (Node t1 r t2) = f t1' r t2'
-    where t1' = foldT f v t1
-          t2' = foldT f v t2
+  where t1' = foldT f v t1
+  t2' = foldT f v t2
 \end{lstlisting}
 
 \begin{enumerate}
