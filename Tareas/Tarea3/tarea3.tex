@@ -65,18 +65,120 @@
   \begin{lstlisting}[language=Haskell]
     foldr f e . map g = foldr (f . g) e
   \end{lstlisting}
-%% https://books.google.com.mx/books?id=Y3GqCAAAQBAJ&pg=PA6&lpg=PA6&dq=foldr+f+e+.+map+g+%3D+foldr+(+f+.+g+)+e&source=bl&ots=4C4WZDWoXy&sig=ACfU3U1gr3XgQEkZ0Lh5VTFYxiWEzRn27w&hl=es&sa=X&ved=2ahUKEwjhypOJtZDoAhURXKwKHa0HBDcQ6AEwAHoECAkQAQ#v=onepage&q=foldr%20f%20e%20.%20map%20g%20%3D%20foldr%20(%20f%20.%20g%20)%20e&f=false
+  Lo probaremos usando la ley de fusión.
+  
+  Recordemos que
+  \begin{lstlisting}[language=Haskell]
+    map g = foldr ((:) . g) []
+  \end{lstlisting}
+  Usando inducción, vemos que cuando tenemos la lista vacía la función
+  \texttt{foldr f e []} nos regresa \texttt{e} por definición. Por lo que para la
+  lista no vacía tenemos lo siguiente.
+  \begin{lstlisting}[language=Haskell]
+    foldr f e (g (x:xs)) = h x (foldr f e xs)
+    -- La parte izquierda se reduce a...
+    f (g x) (foldr f a xs)
+  \end{lstlisting}
+  Por lo que podemos definir \texttt{h x y = f (g x) y} con la ley de fusión.
+
+  y \texttt{h} se puede ver como una composición (\texttt{h = f . g}), por lo que
+  tenemos
+  \begin{lstlisting}[language=Haskell]
+    foldr f e . map g = foldr (f . g) e
+  \end{lstlisting}
+  Para cualquier lista finita.
   
 \item
   \begin{lstlisting}[language=Haskell]
     foldl f e xs = foldr (flip f) e (reverse xs)
   \end{lstlisting}
+  Rescribiremos
+  \begin{lstlisting}[language=Haskell]
+    g = flip f
+  \end{lstlisting}
+  Por lo que provaremos:
+  \begin{lstlisting}[language=Haskell]
+    foldl f e xs = foldr g e (reverse xs)
+  \end{lstlisting}
+  Por inducción para listas finitas.
+  \begin{itemize}
+  \item Caso base ([ ]):
+    \begin{lstlisting}[language=Haskell]
+      foldl f e [] = e
+      -- Por definicion de caso base de foldl
+    \end{lstlisting}
+    Por otro lado tenemos:
+    \begin{lstlisting}[language=Haskell]
+      foldr g e (reverse []) = foldr g e []
+      -- Por definicion de reverse []
+      foldr g e [] = e
+      -- Por definicion de caso base de foldr
+    \end{lstlisting}      
+  \item Hipótesis
+    \begin{lstlisting}[language=Haskell]
+      foldl f e xs = foldr g e (reverse xs)
+    \end{lstlisting}
+  \item Paso inductivo
+    \begin{itemize}
+    \item [--] Por demostrar
+      \begin{lstlisting}[language=Haskell]
+        foldl f e (x:xs) = foldr g e (reverse (x:xs))
+      \end{lstlisting}
+    \end{itemize}
+    \begin{lstlisting}[language=Haskell]
+      foldl f e (x:xs) = foldl f (f e x) xs
+      -- Por definicion de foldl
+      foldl f (f e x) xs = foldr g (f e x) (reverse xs)
+      -- Por induccion
+    \end{lstlisting}
+    Por otro lado tenemos:
+    \begin{lstlisting}[language=Haskell]
+      foldr g e (reverse (x:xs)) = foldr g e (reverse xs ++ [x])
+      -- Por definicion de reverse
+      foldr g e (reverse xs ++ [x]) = foldr g (foldr g e [x]) (reverse xs)
+      -- Por c)
+      foldr g (foldr g e [x]) (reverse xs) = foldr g (f e x) (reverse xs)
+    \end{lstlisting}
+    Como llegamos a lo mismo, afirmamos que se cumple para cualquier lista. Solo
+    recordemos cambiar cambiar a \texttt{g}.
+  \end{itemize}
   
 \item
   \begin{lstlisting}[language=Haskell]
     foldr f e (xs ++ ys) = foldr f (foldr f e ys) xs 
   \end{lstlisting}
-  
+  Tomemos en cuenta la siguiente igualdad.
+  \begin{lstlisting}[language=Haskell]
+    foldr f e (xs ++ ys) = foldr f e (foldr (:) xs ys)
+  \end{lstlisting}
+  Recordemos la ley de fusión que nos dice que:
+  \begin{lstlisting}[language=Haskell]
+    f . foldr g a = foldr h b
+    -- Donde
+    -- f a = b.
+    -- f (g x y) = h x (f y)
+    -- f es estricta.
+  \end{lstlisting}
+  Aplicamos la ley de la siguiente manera:
+  \begin{lstlisting}[language=Haskell]
+    f = foldr f e
+    g = (:)
+    h = f -- f es la f del problema.
+    a = ys
+    b = foldr f e ys
+  \end{lstlisting}
+  Tomamos las siguientes cadenas de igualdades, basándonos en las definiciones
+  anteiores:
+  \begin{lstlisting}[language=Haskell]
+    f a = foldr f e a = foldr f e ys = b
+    
+    h x (f y) = f x (foldr f e y) = foldr f e (x:y) = foldr f e ((:) x y) = foldr f e (g x y) = f (g x y).
+  \end{lstlisting}
+  Con lo anterior, sabemos que la ley de fusión es aplicable. Por lo que al
+  aplicarla, tenemos que
+  \begin{lstlisting}[language=Haskell]
+    foldr f e (xs ++ ys) = foldr f e (foldr (:) ys xs) = foldr f (foldr f e ys)xs
+  \end{lstlisting}
 \end{enumerate}
 
 \section{Árboles Binarios}
