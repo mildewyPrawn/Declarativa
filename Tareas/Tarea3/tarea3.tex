@@ -310,6 +310,59 @@ puede cargar en el día \textit{n+ 1}.  Pero claramente la conclusión es falsa.
 
 Para este ejercicio hay dos posibles soluciones,  la primera es indicar en donde
 está el error en el razonamiento inductivo o la segunda es cargar una vaca adulta
-así demostrando que el argumento es correcto.
+así demostrando que el argumento es correcto.\\
+
+\noindent En este caso queremos hacer inducción sobre el número de días transcurridos tras el día de nacimiento del becerro con el objetivo de
+demostrar una propiedad sobre el peso de los becerros: Su
+peso no es el suficiente para evitar cargarlo. Vamos a ver los números como
+conjuntos de becerros, de manera que el primer conjunto sería el conjunto que
+tiene al becerro con un día de nacido, el segundo conjunto sería el conjunto
+que tiene al becerro con un día de nacido y al becerro con dos días de nacido y
+así sucesivamente.\\
+De una manera más formal la demostración enunciada sería de la
+siguiente manera:\\
+
+\begin{itemize}
+\item \textbf{Caso base:}\\
+Es posible cargar a todos los becerros que están en el conjunto que solo tiene
+al becerro con un día de nacido. Se cumple.
+
+\item \textbf{Hipótesis de inducción:}\\
+Es posible cargar a todos los becerros que están en el conjunto $n$-esímo, el
+cual tiene al becerro con un día de nacido, al que tiene dos, al que tiene tres
+y así sucesivamente hasta n.
+
+\item \textbf{Paso inductivo:}\\
+Sabemos por hipótesis que es posible cargar a todos los becerros del conjunto
+con $n$ becerros. Para demostrar que se cumple para el conjunto con $n+1$
+becerros hacemos lo siguiente:\\
+Formamos a todos los becerros de menor a mayor respecto al número de días que
+tienen de nacidos, la fila tiene $n+1$ becerros, si quitamos al que tiene
+$n+1$ días de nacido nos queda una fila de $n$ becerros y por lo tanto el conjunto que tiene a los becerro de la fila cumple
+la hipótesis, pero ¿qué hay del becerro que quitamos?, lo podemos devolver a la
+fila y ahora quitamos por ejemplo el primero, entonces de nuevo
+tenemos una fila con $n$ a la que podemos aplicar la hipótesis de inducción y
+concluir que si podemos cargar a todos los becerros del conjunto con $n$
+becerros, entonces también podemos cargar a todos los becerros del conjunto con
+$n+1$ becerros.
+\end{itemize}
+
+\noindent La demostración parece correcta, sin embargo hay un agujero en el paso
+inductivo; de un conjunto con $n+1$ becerros hacemos dos conjuntos, uno sin el
+último: $\{1,2,3,4,\dots,n\}$ y otro sin el primero: $\{2,3,4,\dots,n,n+1 \}$,
+el argumento funciona porque aplicamos la hipótesis a los primeros $n$ becerros
+y a los últimos $n$ becerros, si podemos cargar a los primeros $n$ y también
+podemos cargar a los $n$ últimos, entonces podemos cargar a los $n+1$ becerros,
+¿no?. Pues no, supongamos $n=1$, entonces $n+1=2$, por tanto el conjunto sobre
+el que queremos demostrar es: $\{1,2\}$, el conjunto con los $n$ primeros
+becerros es: $\{1\}$ y el de los últimos es $\{2\}$, el argumento ahora sería:
+si podemos cargar al primer becerro y podemos cargar al último, podemos cargar
+a todos los becerros del conjunto. Ya no suena tan bien, el problema es que ya
+no tenemos becerros en la intersección de los primeros n y los últimos n, y
+aunque la intuición nos dice que sí deberíamos ser capaces de cargar un becerro
+de dos días de nacido, la inducción no funcióna por intuición, y como este caso rompe la cadena de implicaciones de la
+inducción, no podemos afirmar nada de los siguientes becerros.\\
+El problema entonces es que no se puede demostrar para $n+1=2$.
+
 
 \end{document}
