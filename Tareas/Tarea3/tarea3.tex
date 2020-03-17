@@ -66,7 +66,7 @@
     foldr f e . map g = foldr (f . g) e
   \end{lstlisting}
   Lo probaremos usando la ley de fusión.
-  
+
   Recordemos que
   \begin{lstlisting}[language=Haskell]
     map g = foldr ((:) . g) []
@@ -87,7 +87,7 @@
     foldr f e . map g = foldr (f . g) e
   \end{lstlisting}
   Para cualquier lista finita.
-  
+
 \item
   \begin{lstlisting}[language=Haskell]
     foldl f e xs = foldr (flip f) e (reverse xs)
@@ -113,7 +113,7 @@
       -- Por definicion de reverse []
       foldr g e [] = e
       -- Por definicion de caso base de foldr
-    \end{lstlisting}      
+    \end{lstlisting}
   \item Hipótesis
     \begin{lstlisting}[language=Haskell]
       foldl f e xs = foldr g e (reverse xs)
@@ -142,10 +142,10 @@
     Como llegamos a lo mismo, afirmamos que se cumple para cualquier lista. Solo
     recordemos cambiar cambiar a \texttt{g}.
   \end{itemize}
-  
+
 \item
   \begin{lstlisting}[language=Haskell]
-    foldr f e (xs ++ ys) = foldr f (foldr f e ys) xs 
+    foldr f e (xs ++ ys) = foldr f (foldr f e ys) xs
   \end{lstlisting}
   Tomemos en cuenta la siguiente igualdad.
   \begin{lstlisting}[language=Haskell]
@@ -171,7 +171,7 @@
   anteiores:
   \begin{lstlisting}[language=Haskell]
     f a = foldr f e a = foldr f e ys = b
-    
+
     h x (f y) = f x (foldr f e y) = foldr f e (x:y) = foldr f e ((:) x y) = foldr f e (g x y) = f (g x y).
   \end{lstlisting}
   Con lo anterior, sabemos que la ley de fusión es aplicable. Por lo que al
@@ -203,10 +203,55 @@ Y la función \texttt{foldT} que define el operador de plegado para la estructur
 \begin{enumerate}
 \item Da en términos de una función \texttt{h} el patrón de encapsulado por el
   operador \texttt{foldT}.
-  
+\begin{lstlisting}[language=Haskell]
+h Void = v
+h (Node t1 r t2) = f (h t1) r (h t2)\end{lstlisting}
+
 \item Enuncia y demuestra la propiedad Universal del operador \texttt{foldT},
   basándose en la Propiedad Universal vista en clase sobre el operador
   \textcolor{orange}{foldr} de listas.
+\begin{itemize}
+\item Propiedad Universal:\\
+\begin{align*}
+h\;Void\; = \;v \qquad \qquad \qquad \qquad \;\;\;\;\;\;\\
+h\;Node\;t_1\;r\;t_2\;=\;f\;(h\;t_1)\;r\;(h\;t_2)\;&\;\Leftrightarrow\;h\;t\;=\;foldT\;f\;\digamma
+\end{align*}
+\item Demostración: \\
+
+\begin{itemize}
+\item[$\Rightarrow$)]
+\begin{align*}
+h\;Void\; = \;v \qquad \qquad \qquad \qquad \;\;\;\;\;\;\\
+h\;Node\;t_1\;r\;t_2\;=\;f\;(h\;t_1)\;r\;(h\;t_2)\;&\;\Rightarrow\;h\;t\;=\;foldT\;f\;\digamma
+\end{align*}
+
+\begin{itemize}
+\item Caso base:\\
+	\begin{align*}
+	h\;Void\;&= v \\
+	h\;Void\;&=\;foldT\;f\;v\;Void
+	\end{align*}
+\item Hipótesis de inducción:
+	\begin{align*}
+	h\;t=foldT\;f\;v\;t
+	\end{align*}
+\item Paso inductivo:
+\begin{align*}
+h\;Node\;t_1\;r\;t_2 &=foldT\;f\;v\;Node\;t_1\;r\;t_2\\
+f\;(h\;t_1)\;r\;(h\;t_2) &=foldT\;f\;v\;Node\;t_1\;r\;t_2
+\qquad \qquad\qquad\qquad
+\end{align*}
+Aplicamos la hipotesis de inducción
+\begin{align*}
+f\;(foldT\;f\;v\;t_1)\;r\;(foldT\;f\;v\;t_2)&=foldT\;f\;v\;Node\;t_1\;r\;t_2\qquad\qquad\qquad\qquad
+\end{align*}
+Por definición de $foldT$
+\begin{align*}
+foldT\;f\;v\;Node\;t_1\;r\;t_2&=foldT\;f\;v\;Node\;t_1\;r\;t_2\qquad\qquad\qquad
+\end{align*}
+\end{itemize}
+\end{itemize}
+\end{itemize}
 \end{enumerate}
 
 \section{Función \texttt{scanr}}
@@ -228,6 +273,15 @@ producto cartesiano.
 
 \begin{enumerate}
 \item En la definición anterior, ¿Quiénes son \texttt{f} y \texttt{e}?
+\begin{itemize}
+\item \texttt{f}:
+		\begin{lstlisting}[language=Haskell]
+f :: [a] -> [[a]] -> [[a]]
+f [] _ = []
+f (x:xs) l = (map (x:) l) ++ (f xs l)\end{lstlisting}
+\item \texttt{e}: \texttt{[[]]}
+\end{itemize}
+
 \item Dada la siguiente ecuación
   \begin{lstlisting}[language=Haskell]
     length . cp = product . map length
