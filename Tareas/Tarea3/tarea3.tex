@@ -214,7 +214,7 @@ h (Node t1 r t2) = f (h t1) r (h t2)\end{lstlisting}
 \item Propiedad Universal:\\
 \begin{align*}
 h\;Void\; = \;v \qquad \qquad \qquad \qquad \;\;\;\;\;\;\\
-h\;Node\;t_1\;r\;t_2\;=\;f\;(h\;t_1)\;r\;(h\;t_2)\;&\;\Leftrightarrow\;h\;t\;=\;foldT\;f\;\digamma
+h\;Node\;t_1\;r\;t_2\;=\;f\;(h\;t_1)\;r\;(h\;t_2)\;&\;\Leftrightarrow\;h\;t\;=\;foldT\;f\;v
 \end{align*}
 \item Demostración: \\
 
@@ -222,7 +222,7 @@ h\;Node\;t_1\;r\;t_2\;=\;f\;(h\;t_1)\;r\;(h\;t_2)\;&\;\Leftrightarrow\;h\;t\;=\;
 \item[$\Rightarrow$)]
 \begin{align*}
 h\;Void\; = \;v \qquad \qquad \qquad \qquad \;\;\;\;\;\;\\
-h\;Node\;t_1\;r\;t_2\;=\;f\;(h\;t_1)\;r\;(h\;t_2)\;&\;\Rightarrow\;h\;t\;=\;foldT\;f\;\digamma
+h\;Node\;t_1\;r\;t_2\;=\;f\;(h\;t_1)\;r\;(h\;t_2)\;&\;\Rightarrow\;h\;t\;=\;foldT\;f\;v
 \end{align*}
 
 \begin{itemize}
@@ -250,6 +250,43 @@ Por definición de $foldT$
 foldT\;f\;v\;Node\;t_1\;r\;t_2&=foldT\;f\;v\;Node\;t_1\;r\;t_2\qquad\qquad\qquad
 \end{align*}
 \end{itemize}
+
+\item[$\Leftarrow$)]
+
+\begin{align*}
+h\;Void\; = \;v \qquad \qquad \qquad \qquad \;\;\;\;\;\;\\
+h\;Node\;t_1\;r\;t_2\;=\;f\;(h\;t_1)\;r\;(h\;t_2)\;&\;\Leftarrow\;h\;t\;=\;foldT\;f\;v\;t
+\end{align*}
+
+\begin{itemize}
+\item Caso base:\\
+	\begin{align*}
+	foldT\;f\;v\;Void &=h\;Void \qquad\qquad\qquad \\
+	v &= v \qquad\qquad\qquad\qquad\qquad\qquad
+	\end{align*}
+	Entonces:
+	\begin{align*}
+	h\;Void\; = \;v \qquad\qquad\qquad\qquad\qquad\qquad
+	\end{align*}
+
+\item Hipótesis de inducción:
+	\begin{align*}
+	h\;Node\;t_1\;r\;t_2\;=\;f\;(h\;t_1)\;r\;(h\;t_2)
+	\end{align*}
+\item Paso inductivo:
+\begin{align*}
+\;h\;t\;=\;foldT\;f\;v\;t
+\end{align*}
+Por definición de $foldT$
+\begin{align*}
+h\;Node\;t_1\;r\;t_2&=\;f\;(h\;t_1)\;r\;(h\;t_2)\qquad\;\;
+\end{align*}
+Aplicamos la hipotesis de inducción
+\begin{align*}
+h\;Node\;t_1\;r\;t_2&=h\;Node\;t_1\;r\;t_2\qquad\qquad
+\end{align*}
+\end{itemize}
+
 \end{itemize}
 \end{itemize}
 \end{enumerate}
@@ -354,15 +391,115 @@ f (x:xs) l = (map (x:) l) ++ (f xs l)\end{lstlisting}
 
 \item Dada la siguiente ecuación
   \begin{lstlisting}[language=Haskell]
-    length . cp = product . map length
-  \end{lstlisting}
+    length . cp = product . map length\end{lstlisting}
   en donde \textcolor{orange}{length} calcula la longitud de una lista y
   \textcolor{orange}{product} regresa el resultado de la multiplicación de todos
   los elementos de una lista. Demuestra que la ecuación es cierta, para esto es
   necesario reescribir ambos lados de la ecuación como instancias de \texttt
-  {orange}{foldr} y ver que son idénticas.
-\end{enumerate}
+  {orange}{foldr} y ver que son idénticas.\\
 
+  \noindent Vamos a fusionar ambos lados ya que las dos partes de la igualdad
+  caben en el esquema:
+  \begin{align*}
+	h\;\cdot\;fold\;g\;w\;=\;fold\;f\;v
+  \end{align*}
+  Al mostrar que la $f$ y $v$ son las mismas para ambas fusiones demostraremos
+  la ecuación.\\
+
+  \textbf{Lado izquierdo:}
+  \begin{lstlisting}[language=Haskell]
+    length . cp = length . foldr m [[]]\end{lstlisting}
+Donde m es:
+  \begin{lstlisting}[language=Haskell]
+  m :: [a]->[[a]]->[[a]]
+  m [] _ = []
+  m (x:xs) l = (map (x:) l) ++ (m xs l)\end{lstlisting}
+  Entonces se debe cumplir:
+  \begin{lstlisting}[language=Haskell]
+    (length . foldr m [[]]) [] = v
+    (length . foldr m [[]]) (x:xs) = f x ((length . foldr m [[]]) xs)\end{lstlisting}
+  Sacamos length:
+  \begin{lstlisting}[language=Haskell]
+    length (foldr m [[]] []) = v
+    length (foldr m [[]] (x:xs))  = f x (length (foldr m [[]]) xs)\end{lstlisting}
+    Separamos:
+    \begin{itemize}
+    \item Para $v$ sabemos que
+    \begin{lstlisting}[language=Haskell]
+    length (foldr m [[]] []) = v\end{lstlisting}
+    Si y solo si:
+    \begin{lstlisting}[language=Haskell]
+    length [[]] = v
+    length [[]] = 1\end{lstlisting}
+
+    \item Y para $f$ sabemos que
+    \begin{lstlisting}[language=Haskell]
+    length (foldr m [[]] (x:xs)) = f x (length (foldr m [[]] xs))\end{lstlisting}
+    Si y solo si
+    \begin{lstlisting}[language=Haskell]
+    length (m x (foldr m [[]] xs)) = f x (lenght (foldr m [[]] xs))\end{lstlisting}
+	Dejamos que $y$ sea $fold\;m\;[[]]\;xs$ y reescribimos:
+    \begin{lstlisting}[language=Haskell]
+    length (m x y) = f x (lenght y)\end{lstlisting}
+    \end{itemize}
+
+    Si juntamos ambas partes:
+	\begin{lstlisting}[language=Haskell]
+    length [[]] = 1
+    length (m x y) = f x (lenght y)\end{lstlisting}
+    Es fácil ver que por la propiedad universal podemos hacer:
+	\begin{lstlisting}[language=Haskell]
+    length . foldr m [[]]  = foldr f 1\end{lstlisting}
+
+\textbf{Lado Derecho:}\\
+Comenzamos dando la definición de map como instancia de fold:
+\begin{lstlisting}[language=Haskell]
+    map f xs = foldr (\x xs -> f x : xs) []\end{lstlisting}
+Cambiamos el map:
+\begin{lstlisting}[language=Haskell]
+    product . map length = product . foldr (\x xs -> length x : xs) []\end{lstlisting}
+Entonces:
+\begin{lstlisting}[language=Haskell]
+    (product . foldr (\x xs -> length x : xs) []) [] = v
+    (product . foldr g []) (x:xs) = f x ((product.foldr g []) xs)
+                          where g = (\x xs -> length x : xs) \end{lstlisting}
+Sacamos product
+\begin{lstlisting}[language=Haskell]
+    product (foldr (\x xs -> length x : xs) [] []) = v
+    product (foldr g [] (x:xs)) = f x ((product.foldr g []) xs)
+                        where g = (\x xs -> length x : xs) \end{lstlisting}
+Separamos:
+\begin{itemize}
+\item Para $v$ sabemos que:
+\begin{lstlisting}[language=Haskell]
+    product (foldr (\x xs -> length x : xs) [] []) = v\end{lstlisting}
+Si y solo si:
+\begin{lstlisting}[language=Haskell]
+    product [] = v
+    product [] = 1\end{lstlisting}
+\item Y para $f$ sabemos que
+\begin{lstlisting}[language=Haskell]
+    product (foldr g [] (x:xs)) = f x (product (foldr g [] xs))
+                        where g = (\x xs -> length x : xs)\end{lstlisting}
+Si y solo si:
+\begin{lstlisting}[language=Haskell]
+ product (g x (foldr g [] xs)) = f x (product (foldr g [] xs))
+                       where g = (\x xs -> length x : xs)\end{lstlisting}
+Dejamos que $y$ sea $foldr\;g\;[]\;xs$ y reescribimos:
+\begin{lstlisting}[language=Haskell]
+  product (g x y) = f x (product y)
+          where g = (\x xs -> length x : xs)\end{lstlisting}
+\end{itemize}
+Volvemos a juntar ambas partes
+\begin{lstlisting}[language=Haskell]
+  product [] = 1
+  product ((\x xs -> length x : xs) x y) = f x (product y)\end{lstlisting}
+Para ver más fácilmente que:
+\begin{lstlisting}[language=Haskell]
+  product . foldr g [] = foldr f 1\end{lstlisting}
+
+En ambos casos llegamos a lo mismo.
+\end{enumerate}
 \section{Parte extra}
 En una granja con mucho folklore se discute acerca del siguiente
 razonamiento.  El día que nace un becerro, cualquiera lo puede cargar con
