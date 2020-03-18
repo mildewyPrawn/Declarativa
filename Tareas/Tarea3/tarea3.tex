@@ -259,8 +259,78 @@ Calcula una definición eficiente para \textcolor{orange}{scanr} partiendo de la
 siguiente:
 
 \begin{lstlisting}[language=Haskell]
-  scanr r f e = map (foldr f e) . tails
+  scanr f e = map (foldr f e) . tails
 \end{lstlisting}
+
+Recordemos la definición de \textcolor{orange}{tails}.
+
+\begin{lstlisting}[language=Haskell]
+  tails :: [a] -> [[a]]
+  tails []     = [[]]
+  tails (x:xs) = (x:xs):tails xs
+\end{lstlisting}
+
+El caso base sería como sigue:
+
+\begin{lstlisting}[language=Haskell]
+  -- Definicion de scanr
+  scanr f e [] = [e]
+\end{lstlisting}
+
+El caso inductivo sería para la lista \texttt{(x:xs)}.
+
+\begin{lstlisting}[language=Haskell]
+  -- Por la especificacion del problema
+  scanr f e (x:xs) = map (foldr f e) . (tails (x:xs))
+  -- Definicion de tails (x:xs)
+  map (foldr f e) . (tails (x:xs)) = map (foldr f e) . ((x:xs): tails xs)
+  -- Definicion de map
+  map (foldr f e) . ((x:xs): tails xs) = foldr f e (x:xs): map (foldr f e) (tails xs)
+  -- Por la especificacion del problema
+  foldr f e (x:xs): map (foldr f e) (tails xs) = foldr f e (x:xs): scanr f e (xs)
+  -- Definicion de foldr
+  foldr f e (x:xs): scanr f e (xs) = f x (foldr f e xs): scanr f e xs
+  -- Sustituimos lo siguiente: foldr f e xs por head (scanr f e xs)
+  f x (foldr f e xs): scanr f e xs = f x (head ys): ys where ys = scanr f e xs
+\end{lstlisting}
+
+Con lo anterior, podemos dar la siguiente definición eficiente para
+\textcolor{orange}{scanr}.
+
+\begin{lstlisting}[language=Haskell]
+  scanr f e []     = [e]
+  scanr f e (x:xs) = f x (head ys): ys
+                       where ys = scanr f e xs
+\end{lstlisting}
+
+Faltaría ver que la afirmación que hicimos es cierta
+(\textcolor{orange}{foldr} f e xs =  \textcolor{orange}{head}
+(\textcolor{orange}{scanr} f e xs)). Bosquejaremos la demostración nada más, pues
+el punto del ejercicio era demostrar lo anterior.
+
+Recordemos lo que hace cada función:
+
+\paragraph{scanr} Toma el segundo argumento y el último item de la lista y aplica
+la función, luego toma el penúltimo item de la lista y el resultado y continúa
+aplicando. Regresa la lista de resultados finales.
+\paragraph{foldr} Toma el segundo argumento y el último item de la lsita y aplica
+la función, luego toma el penúltimo item de la lista y continúa aplicando.
+Regresa el resultado final.
+
+Sabiendo lo que hacen las funciones podemos ver que mientras \texttt{foldr}
+regresa la aplicación a toda la lista, \texttt{scanr} regresa la lista con la
+función aplicada a cada elemento. Es importante notar que \texttt{scanr} crece la
+lista y aplica de atrás para adelante y \texttt{foldr} igual aplica de atrás para
+adelante. Ambas usan el resultado de la aplicación $n$ en la aplicación $n+1$.
+Por lo que podemos ver que hacen prácticamente lo mismo. Pero no regresan lo
+mismo. Entonces aquí entra la función \texttt{head} aplicada a \texttt{scanr}, la
+cual saca la cabeza de la lista a la que se le aplicó la función en \texttt{
+  scanr}. Este elemento es el resultado de la aplicación a toda la lista, que es
+lo mismo que hace \texttt{foldr}.
+
+Por lo que podemos decir que \textcolor{orange}{foldr} f e xs =  \textcolor
+{orange}{head} (\textcolor{orange}{scanr} f e xs) se cumple.
+
 
 \section{Función \texttt{cp}}
 Considera la siguiente definición de la función \texttt{cp} que calcula el
