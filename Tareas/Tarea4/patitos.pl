@@ -1,3 +1,4 @@
+%% M-x prolog-mode for emacs :)
 %% matriz de adyacencias.
 matrix([
               a-b,a-d,a-e,
