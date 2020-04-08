@@ -41,8 +41,26 @@ evolution g@(x:xss) =
   let
     neigh = sort $ neighbours (multZ (zipper g 1 (length x)) 0)
   in
-    -- neigh
-    length g
+    neigh
+    -- length g
+
+-- | findTup. Función que nos dice si una tupla con fst T == fst n se encuentra
+--            en una lista.
+findTup [] n     = False
+findTup ((a,b):xs) n = if a == fst n then True else findTup xs n
+
+aplana [] ac = ac
+aplana ((p,n):xs) ac = if findTup ac p
+                       then aplana xs ac
+                       else if snd(p) == "B"
+                            then aplana xs ac++[(fst p, ("B",(1,0)))]
+                            else aplana xs ac++[(fst p, ("G",(0,1)))]
+
+-- | actTup. Función que actualiza una tubla de una lista.
+actTup [] _ = error "No estaba la tupla"
+actTup (x:xs) n = if fst x == fst n
+                  then [(fst x, snd n)] ++ xs
+                  else [x] ++ actTup xs n
 
 
 zipper [] _ _ = []
