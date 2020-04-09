@@ -35,33 +35,60 @@ genZero xs =
     then tblr
     else error "Pusiste un mal input \129414\128299"
 
--- evolution :: Generation -> Generation
--- evolution [] = []
+evolution :: Generation -> Generation
+evolution [] = []
 evolution g@(x:xss) =
   let
     neigh = sort $ neighbours (multZ (zipper g 1 (length x)) 0)
   in
-    neigh
-    -- length g
+    retGen (map (\x -> snd x) (duckMutation (aplana neigh []) [])) (length g) []
 
--- | findTup. Función que nos dice si una tupla con fst T == fst n se encuentra
---            en una lista.
-findTup [] n     = False
-findTup ((a,b):xs) n = if a == fst n then True else findTup xs n
+generations :: Generation -> [Generation]
+generations [] = error "\129414\129414\129414\129414, no hay suficientes \129414"
+generations e = genAux e [e]
+
+
+-- genAux [] gens = gens
+genAux e gens =
+  let
+    e' = evolution e
+  in
+    if (e' == e)
+    then gens
+    else genAux e' (gens++[e'])
+
+
+
+retGen [] n ac = ac
+retGen l@(x:y:z:xs) n ac = retGen xs n (ac++[take n l])
+
+-- Un pato bueno se mantiene bueno si es adyacente a exactamente dos o tres
+-- patos también buenos, en otro caso se transforma en un pato malo.
+
+-- Si un pato malo es adyacente a exactamente tres patos buenos entonces se
+-- convierte en bueno, en otro caso sigue siendo malo.
+
+duckMutation [] mut = mut
+duckMutation ((c,ad):xs) mut = if (snd c) == "G"
+                               then if (snd ad == 2 || snd ad == 3)
+                                    then duckMutation xs (mut++[(fst c,"G")])
+                                    else duckMutation xs (mut++[(fst c,"B")])
+                               else if (snd ad == 3)
+                                    then duckMutation xs (mut++[(fst c,"G")])
+                                    else duckMutation xs (mut++[(fst c,"B")])
+
 
 aplana [] ac = ac
-aplana ((p,n):xs) ac = if findTup ac p
-                       then aplana xs ac
-                       else if snd(p) == "B"
-                            then aplana xs ac++[(fst p, ("B",(1,0)))]
-                            else aplana xs ac++[(fst p, ("G",(0,1)))]
+aplana ((a,n):xs) ac = if snd n == "B"
+                       then aplana xs (agrega (a, (1,0)) ac)
+                       else aplana xs (agrega (a, (0,1)) ac)
 
--- | actTup. Función que actualiza una tubla de una lista.
-actTup [] _ = error "No estaba la tupla"
-actTup (x:xs) n = if fst x == fst n
-                  then [(fst x, snd n)] ++ xs
-                  else [x] ++ actTup xs n
+agrega (a,s) [] = [(a,s)]
+agrega (a,s) (x:xs) = if a == fst x
+                      then [(a, sumT s (snd x) )] ++ xs
+                      else [x] ++ agrega (a,s) xs
 
+sumT (a,b) (c,d) = (a+c, b+d)
 
 zipper [] _ _ = []
 zipper (x:xss) n m = [zip [n..m] x] ++ zipper xss (n) (m)
