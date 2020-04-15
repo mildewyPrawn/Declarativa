@@ -41,14 +41,13 @@ evolution g@(x:xss) =
 --                generaciones siguientes hasta que ya no se puedan generar.
 generations :: Generation -> [Generation]
 generations [] = error "\129414\129414\129414\129414, no hay suficientes \129414"
-generations e = genAux e [e]
-  where genAux e gens =
-          let
-            e' = evolution e
-          in
-            if (e' == e)
-            then gens
-            else genAux e' (gens++[e'])
+generations e =
+  let
+    e' = evolution e
+  in
+    if (e' == e)
+    then [e']
+    else [e] ++ generations e'
 
 ---------------------------------------------------------------------------------
 --------                          AUXILIARES                             --------
@@ -106,7 +105,6 @@ multZ (x:xss) n = [map (\y -> (fst y+n, snd y)) x] ++ multZ xss (n+length x)
 
 
 -- https://stackoverflow.com/questions/11267637/neighbours-in-2dm-matrix-represented-as-list-of-list?fbclid=IwAR1oGKfuSO63LHGaYSGWIDhNrbU4wC2qJh_HlYOhgxm0phPBo9iKyiEd_0k
-
 rightList (x:y:rest) = (x,y) : rightList (y:rest)
 rightList _ = []
 
