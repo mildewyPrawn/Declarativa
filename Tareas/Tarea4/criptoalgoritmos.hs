@@ -20,11 +20,12 @@ isOperator x = elem x ["+","-","*","="]
 --Funcion que regresa unas coasa bien lokas creo que esta es la que hay que
 --modificar
 reduceChar s = (words s, Data.List.map (myZip1 ms sr) (l sr))
-  where (ms,sr) = (myZip2 (Data.List.filter isAlpha (prim $ words s)) [],
+  where (ms,sr) = (myZip3 (Data.List.filter isAlpha (Data.List.map (\x -> head x) $ words s)) [],
+  -- where (ms,sr) = (myZip3 (Data.List.filter isAlpha (prim2 $ words s)) [],
                     Data.List.filter (isAlpha) (nub s))
                   
 myZip1 nV u p = if (Data.List.null (intersect nV g)) then g else []
-  where g = myZip2 u p
+  where g = myZip3 u p
 
 prim [] = []
 prim (xs:xss) = [head xs] ++ prim xss
@@ -39,16 +40,8 @@ l s = Data.List.map show [0 .. (read (replicate (length s) '9') :: Int)]
 --de p solo si w no es un operador, en ese caso regresa w sin cambios
 convert1P p w = if isOperator w || p==[]
                 then w
-                else convert p2 w
+                else Data.List.map (\x -> (p2 ! x)) w
   where p2 = fromList p
-
---Convierte una cadena a indices de p
---convert p (x:xs) = Prelude.foldr (\x xs p-> (p ! x) : xs) []
-convert _ [] = []
-convert p (x:xs) = (p ! x) : convert p xs
-
--- Otra madre 'minimizada' no sé porque no sé como probarla :v
-convert2 p l = Data.List.map (\y -> (p ! y)) l
 
 --Predicado para saber si jala, si la evaluación es igual al resutlado,
 --entonces regresa True y False en caso contrario
@@ -76,7 +69,7 @@ evalua n1 o s2
 filtra w pers = Data.List.filter (jala w) pers
 
 --principal :: String -> [String]
-principal s =  Set.fromList $ filtra w pers
+principal s =  filtra w pers
   where (w , pers)= reduceChar s
   
 --myZip :: String -> String -> [(Char, Char)]
