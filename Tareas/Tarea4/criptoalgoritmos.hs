@@ -20,7 +20,7 @@ isOperator x = elem x ["+","-","*","="]
 --Funcion que regresa unas coasa bien lokas creo que esta es la que hay que
 --modificar
 
-reduceChar s = (words s, Data.List.map (myZip1 (nub ms) sr) (lV (Data.List.map (\x -> head x) $ words s) sr [""]))
+reduceChar s = (words s, Data.List.map (myZip3 sr) (lV (Data.List.map (\x -> head x) $ words s) sr [""]))
   where (ms,sr) = (myZip3 (Data.List.filter isAlpha (Data.List.map (\x -> head x) $ words s)) [],
                    Data.List.filter (isAlpha) (nub s))
 
