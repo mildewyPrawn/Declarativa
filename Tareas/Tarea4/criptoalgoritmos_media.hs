@@ -8,40 +8,35 @@
 -}
 
 module Criptoalgoritmos where
-import Data.Set (Set)
-import qualified Data.Set as Set
 import Data.Map
 import Data.List
 import Data.Char
 import Data.Maybe
+
 --Funcion que indica si x es un Operador
---isOperator :: String -> Bool
+isOperator :: String -> Bool
 isOperator x = elem x ["+","-","*","="]
---Funcion que regresa unas coasa bien lokas creo que esta es la que hay que
---modificar
+isOperatorC :: Char -> Bool
+isOperatorC x = elem x ['+','-','*','=',' ']
 
-reduceChar s = (words s, Data.List.map (myZip3 sr) (lV (Data.List.map (\x -> head x) $ words s) sr [""]))
-  where (ms,sr) = (myZip3 (Data.List.filter isAlpha (Data.List.map (\x -> head x) $ words s)) [],
-                   Data.List.filter (isAlpha) (nub s))
+--Funcion que dada una cadena que representa una operación valida para el
+--programa, regresa una tupla la cuál tiene en su primer entrada
+--una lsita con las palabras y operadores de la entrada.
+--La segunda entrada tiene una lsita con todas las posibles soluciones del
+--problema, por ejemplo si la entrada es AA + BB = CC, entonces esta entrada
+--serían todas las listas de la forma [('A','n'),('B','m'),('C','o')]
+reduceChar s = (words s,
+                Data.List.map (zip sr) (lV (Data.List.map (\x -> head x) $ words s) sr [""]))
+  where sr = Data.List.filter (isAlpha) (nub s)
 
-
- --lV ms sr [""]
-
-  --sr = SENDMORY
-  --ms = NO VALIDAS
-  -- where (ms,sr) = (myZip3 (Data.List.filter isAlpha (prim2 $ words s)) [],
-
-
-
-prim [] = []
-prim (xs:xss) = [head xs] ++ prim xss
-
--- otra madre que tarda menos
-prim2 ll = Data.List.map (\x -> head x) ll
-
---l :: Foldable t => t a -> [String]
-l s = Data.List.map show [0 .. (read (replicate (length s) '9') :: Int)]
-
+--lV genera todas las posibles cadenas con las cuales zipear las letras de la
+--entrada, por ejemplo si la entrada es AA + BB = CD, va a regresar una lsita
+--con todas las posibles cadenas de la forma
+--                      ABCD
+--                      abcd
+--Donde a, b y c pueden tomar valores del 1 al 9, mientras que d puede tomar
+--del 0 al 9, con esto evitamos que ninguna letra que esté al principio de
+--alguna palabra valga 0
 lV :: (Foldable t, Eq t1) => t t1 -> [t1] -> [[Char]] -> [String]
 lV nV [] act = act
 lV nV (x:xs) act =  lV nV xs act2
@@ -49,66 +44,43 @@ lV nV (x:xs) act =  lV nV xs act2
                      then [subs ++ [s] | s <- "123456789", subs <- act]
                      else [subs ++ [s] | s <- "0123456789", subs <- act]
 
+--conv convierte una cadena a elementos del "Diccionario" p. por ejemplo
+--si l = AA + BB = CC y p = [(A,'1'),(B,'2'),(C,'3')]
+--conv regresará 11 + 22 = 33
+conv :: [(Char, Char)] -> String -> String
+conv p l = Data.List.map (\x -> if (isOperatorC x) then x else (p2 ! x)) l
+                where p2 = fromList p
 
 
---Data.List.map (\x -> 9) "asdfasdf"
-
---Funcion que dada una permutacion p, convierte la palabra w a los indices
---de p solo si w no es un operador, en ese caso regresa w sin cambios
-convert1P p w = if isOperator w || p==[]
-                then w
-                else Data.List.map (\x -> (p2 ! x)) w
-  where p2 = fromList p
-
-
---Predicado para saber si jala, si la evaluación es igual al resutlado,
---entonces regresa True y False en caso contrario
-jala ws [] = False
-jala ws p = (==) (evalua1 0 (Data.List.take (fromJust $ elemIndex "=" l) l))
-            (read (last l) :: Int)
-  where l = Data.List.map (convert1P p) ws
+--Predicado para saber si una posible solucion lo es o no,
+--si la evaluación es igual al resutlado, entonces regresa True y False en
+--caso contrario
+funciona :: [Char] -> Int -> [(Char, Char)] -> Bool
+funciona ws n p = (==) (evalua1 0 (Data.List.take n l)) (read (last l) :: Int)
+  where l = words $ conv p ws
 
 --Evalúa una lista de cadenas para regresar un entero
---evalua1 :: Int -> [String] -> Int
+evalua1 :: Int -> [String] -> Int
 evalua1 n [] = n
 evalua1 n (x:xs)
   | isOperator x = evalua1 (evalua n x (head xs)) (tail xs)
   | otherwise = evalua1 (read x :: Int) xs
 
 --Evalua un número entero y una cadena de numeros con el operador o
---evalua :: Int -> String -> String -> Int
+evalua :: Int -> String -> String -> Int
 evalua n1 o s2
    |o=="+" = n1 + n2
    |o=="-" = n1 - n2
    |o=="*" = n1 - n2
   where n2 = read s2 :: Int
 
---filtra :: [String] -> [String] -> [String]
-filtra w pers = Data.List.filter (jala w) pers
+--Filtra aplica filter con funciona para filtrar las soluciones correctas
+--de toda la lista de soluciones posibles que genera lV.
+filtra :: [String] -> [[(Char, Char)]] -> String -> [[(Char, Char)]]
+filtra w pers s= Data.List.filter (funciona s n) pers
+                    where n = fromJust $ elemIndex "=" w
 
---principal :: String -> [String]
-principal s =  filtra w pers
+--Funcion principal del programa.
+criptoalgoritmos :: String -> [[(Char, Char)]]
+criptoalgoritmos s =  filtra w pers s
   where (w , pers)= reduceChar s
-
-
-
-myZip1 nV u p = if (Data.List.null (intersect nV g)) then g else []
-  where g = myZip3 u p
-
---myZip :: String -> String -> [(Char, Char)]
-myZip [] [] = []
-myZip (a:as) [] = (a,'0') : myZip as []
-myZip (a:as) (b:bs) = (a,b) : myZip as bs
-
-myZip2 l@(x:xs) [] = Data.List.map (\y -> (y, '0')) l
-myZip2 (a:as) (b:bs) = (a,b) : myZip as bs
-
--- Duda, tiene que ser siempre que l > r ??
-myZip3 l r = zip l r ++ Data.List.map (\y -> (y, '0')) (Data.List.drop (length r)l)
-
-
-
-
-s= "AA + BB = CC"
-sr = Data.List.filter (isAlpha) (nub s)
-ms = myZip3 (Data.List.filter isAlpha (Data.List.map (\x -> head x) $ words s)) []
