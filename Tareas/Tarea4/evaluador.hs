@@ -78,7 +78,8 @@ parseador s =
                           in
                             Sum (parseador a) (parseador (tail b))
                         -- Nothing -> I (read (head s) :: Int)
-                        Nothing -> I (head s :: String)
+                        -- Nothing -> I (head s :: String)
+                        Nothing -> I (s)
     -- tail b
     -- if head b == "="
     -- then Iq (parseador a) (parseador (tail b))
@@ -96,7 +97,7 @@ parseador s =
 -- sust (x:xs) l = [x]
 
 
--- s = "SEND + MORE = MONEY"
+-- s = "ABD * SEND + MORE * CDE = MONEY"
 s = "9567 + 1085 = 1O652"  
 
 
