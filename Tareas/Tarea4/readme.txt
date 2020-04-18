@@ -32,6 +32,7 @@ operaciones en ambos lados de la igualdad, como
 
 $criptoalgoritmos2 "AA + BB = DD * C"
 
+El código de este último está sin comentar y mal identado pero funciona xD
 ---------------------------------------------------------------------------------
 ---                    EJERCICIO 2: JUEGO DE LA VIDA (PATITOS)                ---
 ---------------------------------------------------------------------------------

@@ -30,7 +30,6 @@ type Sust = (Char, MyTup String)
 
 -- resuelve :: MyTup String -> Int
 resuelve (I a) = read a :: Int
--- resuelve (I a) = a
 resuelve (Mul a b) = (resuelve a) * (resuelve b)
 resuelve (Sum a b) = (resuelve a) + (resuelve b)
 resuelve (Res a b) = (resuelve a) - (resuelve b)
@@ -100,13 +99,6 @@ isOperatorC x = elem x ['+','-','*','=', ' ']
 reduceChar s = (words s, Data.List.map (zip sr) (lV (Data.List.map (\x -> head x) $ words s) sr [""]))
   where sr = Data.List.filter (isAlpha) (nub s)
 
-
- --lV ms sr [""]
-
-  --sr = SENDMORY
-  --ms = NO VALIDAS
-  -- where (ms,sr) = (myZip3 (Data.List.filter isAlpha (prim2 $ words s)) [],
-
 lV :: (Foldable t, Eq t1) => t t1 -> [t1] -> [[Char]] -> [String]
 lV nV [] act = act
 lV nV (x:xs) act =  lV nV xs act2
@@ -114,33 +106,10 @@ lV nV (x:xs) act =  lV nV xs act2
                      then [subs ++ [s] | s <- "123456789", subs <- act]
                      else [subs ++ [s] | s <- "0123456789", subs <- act]
 
-
-
---Data.List.map (\x -> 9) "asdfasdf"
-
---Funcion que dada una permutacion p, convierte la palabra w a los indices
---de p solo si w no es un operador, en ese caso regresa w sin cambios
-convert1P p w = if isOperator w || p==[]
-                then w
-                else Data.List.map (\x -> (p2 ! x)) w
-  where p2 = fromList p
-
-
-jalaV s p= verifica $ parseador $ words $ conv p s
-
-
 --Predicado para saber si jala, si la evaluación es igual al resutlado,
 --entonces regresa True y False en caso contrario
-jala ws p = (==) (evalua1 0 (Data.List.take (fromJust $ elemIndex "=" l) l))
-            (read (last l) :: Int)
-  where l = Data.List.map (convert1P p) ws
+jalaV s p= verifica $ parseador $ words $ conv p s
 
-ent= "AA + BB = CC"
-
-
- {-[AA, +, BB, =, CC]
- [AA, +, BB]
- [(A,1) (B,1)(C,1)]-}
 
 --Evalúa una lista de cadenas para regresar un entero
 --evalua1 :: Int -> [String] -> Int
@@ -159,17 +128,10 @@ evalua n1 o s2
 
 filtraV s p = Data.List.filter (jalaV s) p
 
---filtra :: [String] -> [String] -> [String]
-filtra w pers = Data.List.filter (jala w) pers
-
 --principal :: String -> [String]
-principal s =  filtraV s pers
+criptoalgoritmos2 s =  filtraV s pers
   where (w , pers)= reduceChar s
-
-r="SEND + MORE = MONEY"
 
 --conv :: [(String, String)] -> [Char] -> [Char]
 conv p l = Data.List.map (\x -> if (isOperatorC x) then x else (p2 ! x)) l
                 where p2 = fromList p
-
-a = verifica $ parseador $ words $ conv [('A','1'),('B','2')] "AA + BB = AB"
