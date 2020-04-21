@@ -17,7 +17,8 @@ module Cantaros where
  Regresa una lsita de las instrucciones para resolver el problema.-}
  cantaros :: Integer-> Integer-> Integer-> [Action]
  cantaros c1 c2 f
-            | c1<f && c2<f = ["imposibol"]
+            | c1<f && c2<f = ["No es posible"]
+            | c1 == c2 && c1 /=f = ["No es posible"]
             | c1 == f = ["Llena el cantaro A en el rio"]
             | c1 == f = ["Llena el cantaro B en el rio"]
             | otherwise = map acciones (resuelve1 c1 c2 f l1)
@@ -69,9 +70,9 @@ module Cantaros where
  --validos en uno y actualiza a1 y a2 despues de aplciar la accion agregada.
  aumenta :: Integer -> Integer -> Integer -> [(Integer, Integer, [Integer])]
             -> [(Integer, Integer, [Integer])]
- aumenta c1 c2 f l = eval c1 c2 f (concat $ map aumenta1 l)
+ aumenta c1 c2 f l = eval c1 c2 f (concat $ map aumenta2 l)
 
- --Esto salia con un map (\x -> test1 c1 c2 f) (concat $ map aumenta1 l)
+ --Esto salia con un map (\x -> test1 c1 c2 f) (concat $ map aumenta2 l)
  --pero no me daban los tipos... solo es hacer la actualizacion de a1 y a2
  --a cada tripleta
  eval :: Integer -> Integer -> Integer -> [(Integer, Integer, [Integer])]
@@ -79,9 +80,16 @@ module Cantaros where
  eval _ _ _ [] = []
  eval c1 c2 f (x:xs) = (test1 c1 c2 f x)++ (eval c1 c2 f xs)
 
- --Le aumenta a la lista l todas las posiblesa accionesa válidas.
- aumenta1 :: (Integer, Integer,[Integer]) -> [(Integer, Integer,[Integer])]
- aumenta1 (a1,a2,l) = [(a1,a2, l ++ [y]) | y<-[1,2,3,4,5,6], y /= last l]
+ aumenta2 :: (Integer, Integer,[Integer]) -> [(Integer, Integer,[Integer])]
+ aumenta2 (a1,a2,l) = [(a1,a2, l ++ [y]) | y<-posibles $ last l]
+
+ posibles n
+            |n==1 = [3,6]
+            |n==2 = [4,5]
+            |n==3 = [1,2,5,6]
+            |n==4 = [1,2,5,6]
+            |n==5 = [1,2,4]
+            |n==6 = [1,2,3]
 
  --Regresa la tripleta con a1 y a2 actualizados dado el último paso agregado
  --de la lista de acciones l
