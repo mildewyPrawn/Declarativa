@@ -28,7 +28,8 @@ $ criptoalgoritmos "AA + BB = CC"
 por ejemplo.
 Ya que no pudimos resolver al menos en tiempo este ejercicio también incluimos
 el archivo criptoalgoritmos2.hs, el cuál puede resolver entradas con
-operaciones en ambos lados de la igualdad, como
+operaciones en ambos lados de la igualdad (Y tomando en cuenta la jerarquía de
+operaciones), como
 
 $criptoalgoritmos2 "AA + BB = DD * C"
 
