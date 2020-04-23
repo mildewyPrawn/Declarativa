@@ -25,7 +25,7 @@ todos p xs = foldr (&&) True $ map p xs
 -- | alguno. Función que decide si al menos un elemento de una lista cumplen un
 --           predicado
 alguno :: (a -> Bool) -> [a] -> Bool
-alguno p xs = foldr (||) False $ map p xs 
+alguno p xs = foldr (||) False $ map p xs
 
 -- | toma. Función que selecciona elementos de una lista mientras cumplan un
 --         predicado (equivalente a takeWhile del preludio).
@@ -33,7 +33,7 @@ toma :: (Eq a) => (a -> Bool) -> [a] -> [a]
 toma p xs = take ((\x -> fromJust x) $ elemIndex
                    (head $ filter (\x -> not $ p x) xs) xs) xs
 
-  
+
 -- | deja. Función que elimina elementos de una lista mientras cumplan el
 --         predicado.
 deja :: (Eq a) => (a -> Bool) -> [a] -> [a]
@@ -47,11 +47,8 @@ deja p xs = drop ((\x -> fromJust x) $ elemIndex
 -- | altMap. Función que aplica alternadamente las funciones que recibe como
 --           argumentos.
 altMap :: (a -> b) -> (a -> b) -> [a] -> [b]
-altMap f g l = aux f g True l
-  where
-    aux f g _ [] = []
-    aux f g True (x:xs) = f x : aux f g False xs
-    aux f g False (x:xs) = g x : aux f g True xs
+altMap f g [] = []
+altMap f g (x:xs) = f x : altMap g f xs
 
 ---------------------------------------------------------------------------------
 --------                        TERCERA PARTE                           ---------

@@ -32,8 +32,8 @@ binarios xs = mapF (\x -> foldl toDigit 0 x) $ mapF (\x -> toBin x :: [Int]) xs
 --                 que contiene únicamente aquellos que son triangulares.
 -- Un número triangular es aquel que puede recomponerse en la forma de un
 -- tríangulo equilátero.
--- triangulares :: [Int] -> [Int]
-triangulares l = mapF (\x -> (round x) :: Int) $ filterF tP l
+triangulares :: [Int] -> [Int]
+triangulares l =  filterF tP l
 
 ---------------------------------------------------------------------------------
 --------                          AUXILIARES                             --------
@@ -43,7 +43,9 @@ toDigit n d = 10*n + d
 
 -- | tP. Función para ver si un número es triangular.
 --       True si es un número triangular. False en otro caso.
-tP n = (\x -> x == fromInteger (round x)) (sqrt(8*n + 1))
+tP :: Int -> Bool
+tP n = (\x -> x == fromInteger (round x)) (sqrt(8*n1 + 1))
+        where n1=fromIntegral n
 
 -- | mapF. Función map con foldr
 mapF :: (a -> b) -> [a] -> [b]
