@@ -26,7 +26,7 @@ iflip i = foldl toDigit 0 $ reverseF $ mapF (\x -> read [x] :: Int) (show i)
 -- | binarios. Función que recibe una lista de números y regresa una lista de
 --             números binarios asociados a los números orginales.
 binarios :: [Int] -> [Int]
-binarios xs = mapF (\x -> foldl toDigit 0 x) $ mapF (\x -> toBin x :: [Int]) xs
+binarios xs = mapF (\x -> foldl toDigit 0 (toBin x :: [Int])) xs
 
 -- | triangulares. Función que recibe una lista de números y regresa una nueva
 --                 que contiene únicamente aquellos que son triangulares.
