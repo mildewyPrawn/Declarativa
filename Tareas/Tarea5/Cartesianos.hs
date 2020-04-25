@@ -15,7 +15,7 @@ import Data.List
 data CartT a = Void | Node (CartT a) a (CartT a) -- deriving (Show)
 
 instance Show a => Show (CartT a) where
-  show t = showTree t ""
+  show t = showSubL t ""
 
 -- | cart. Función que construye un árbol cartesiano a partir de una lista
 --         siguiendo
@@ -43,36 +43,38 @@ inorder (Node l n r) = inorder l ++ [n] ++ inorder r
 desc Void = 0
 desc (Node l n r) = 1 + desc l + desc r
 
--- showTree Void c = ""
--- showTree (Node Void n Void) c = c ++ show n
-showTree (Node l n r) c =
-  let
-    s = addWhite 3 " "
-    ll = desc l
-    lr = desc r
-  in
-  c ++ show n ++ showSubL l s ++ showSubL r s
-  -- "\n│"
-  -- "\n└──"  ++ " " ++ showTree r t
-
-
 -- Hasta ahorita funciona vergas con árboles completos
-showSubL Void s               = s ++ "\n└─── V"
-showSubL (Node Void n Void) s = "\n│" ++ s ++ "\n└─── " ++ show n ++ "\n" ++
-                                nS ++ "└─── V" ++ "\n" ++ nS ++ "└─── V"
-  where nS = s ++ addWhite 2 " "
--- showSubL (Node l n Void) s    = s ++ "\n└─── " ++ show n ++ showSubL l nS
-  -- where nS = s ++ addWhite 2 " "
--- showSubl (Node Void n r)
-showSubL (Node l n r) s = s ++ "\n├─── " ++ show n ++ showSubL l nS ++ showSubL r nS
-  where nS = s ++ addWhite 2 " "
--- showSub t s = s
+showSubL Void s = s ++ "└─── V"
+showSubL (Node v1@Void n v2@Void) s = show n ++
+                                      nS ++ "├──(L) V" ++
+                                      nS ++ "└──(R) V"
+  where nS = "\n" ++ s
+showSubL (Node Void n r) s          = show n ++
+                                      nS ++ "├──(L) V" ++
+                                      nS ++ "└──(R) " ++ showSubL r oS
+  where
+    nS = "\n" ++ s
+    oS = addWhite 12 s
+showSubL (Node l n Void) s          = show n ++
+                                      nS ++ "├──(L) " ++ showSubL l oS ++ 
+                                      nS ++ "└──(R) V"
+  where
+    nS = "\n" ++ s
+    oS = addWhite 12 s
+showSubL (Node l n r) s             = show n ++
+                                      nS ++ "├──(L) " ++ showSubL l oS ++
+                                      nS ++ "└──(R) " ++ showSubL r oS
+  where
+    nS = "\n" ++ s
+    oS = addWhite 12 s
 
-addWhite 0 c = c
-addWhite n c = if (n < 0)
-               then c
-               else addWhite (n-3) c ++ " "
+
+addWhite 0 s = s
+addWhite n s = if (n < 0)
+               then s
+               else addWhite (n-3) s ++ " "
 
 
 siete = Node (Node (Node Void 4 Void) 2 (Node Void 5 Void)) 1 (Node (Node Void 6 Void) 3 (Node Void 7 Void))
 tresI = (Node (Node (Node Void 3 Void)2 Void) 1 Void)
+tresD = (Node Void 3 (Node Void 2 (Node Void 1 Void)))
