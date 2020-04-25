@@ -40,10 +40,7 @@ inorder :: CartT a -> [a]
 inorder Void         = []
 inorder (Node l n r) = inorder l ++ [n] ++ inorder r
 
-desc Void = 0
-desc (Node l n r) = 1 + desc l + desc r
-
--- Hasta ahorita funciona vergas con árboles completos
+-- | showSubL. Función que hace un 'prettyPrint' de los árboles.
 showSubL Void s = s ++ "└─── V"
 showSubL (Node v1@Void n v2@Void) s = show n ++
                                       nS ++ "├──(L) V" ++
@@ -69,12 +66,14 @@ showSubL (Node l n r) s             = show n ++
     oS = addWhite 12 s
 
 
+
+-- Auxiliar
 addWhite 0 s = s
 addWhite n s = if (n < 0)
                then s
                else addWhite (n-3) s ++ " "
 
-
+-- Árboles 
 siete = Node (Node (Node Void 4 Void) 2 (Node Void 5 Void)) 1 (Node (Node Void 6 Void) 3 (Node Void 7 Void))
 tresI = (Node (Node (Node Void 3 Void)2 Void) 1 Void)
 tresD = (Node Void 3 (Node Void 2 (Node Void 1 Void)))
