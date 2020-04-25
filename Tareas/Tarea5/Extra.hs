@@ -64,6 +64,7 @@ showTime :: Time -> String
 showTime (V h m)        = show h ++ show m ++ "HRS"
 showTime (D 12 0 True)  = "Mediodia"
 showTime (D 12 0 False) = "Medianoche"
+-- TODO: hay que arreglar que to24 (V 0 0)/(D 0 0 _) regrese algo bien
 showTime (D h m b)      = show h ++ ":" ++ show m ++ if b then "PM" else "AM"
 
 -- | ltTime. Función que decide si una hora es menor a otra, independientemente
