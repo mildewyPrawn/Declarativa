@@ -1,6 +1,6 @@
 {-
 - Programacion Declarativa 2020-1
-- Tarea 5: I'm Groot. Parte Extra
+- Tarea 5: I'm Groot. Cartesianos
 - Profesor: Dr. Favio Ezequiel Miranda Perea
 - Ayudante: Javier EnriquezMendoza
 - Alumnos: Juan Alfonso Garduño Solís
