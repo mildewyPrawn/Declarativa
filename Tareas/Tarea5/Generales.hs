@@ -60,12 +60,12 @@ foldg f e t =
     foldr f e lt
 
 -------------------------------------------------------
-foldg2 :: (a -> [b] -> b) -> Gtree a -> b 			 --
-foldg2 f (Node n []) = f n []						 --
-foldg2 f (Node n l) = f n (map (foldg2 f) l)		 --
-													 --
-mySum n [] = n 										 --
-mySum n l = n + sum l 								 --
+foldg2 :: (a -> [b] -> b) -> Gtree a -> b
+foldg2 f (Node n []) = f n []
+foldg2 f (Node n l) = f n (map (foldg2 f) l)
+
+mySum n [] = n
+mySum n l = n + sum l
 -------------------------------------------------------
 
 -- | searchg. Función que verifica si un elemento pertenece al árbol general.
