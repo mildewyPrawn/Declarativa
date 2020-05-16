@@ -9,15 +9,19 @@
 
 module Braun where
 
+ import Barray
+
  data BTree a = BVoid | BNode a (BTree a) (BTree a) deriving(Show,Eq)
+
+ instance BArray BTree where
 
  -- | isBal. Función que verifica si un árbol está balanceado.
  -- isBal :: BTree a -> Bool
 
-
+ emptyArray = BVoid
 
  --Arbol de ejemplo
- a :: BTree Int
+ -- a :: BTree Int
  a = (BNode 0
       (BNode 1 (BNode 3 BVoid BVoid) (BNode 5 BVoid BVoid))
       (BNode 2 (BNode 4 BVoid BVoid) (BNode 6 BVoid BVoid)) )
