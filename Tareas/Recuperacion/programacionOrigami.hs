@@ -33,7 +33,7 @@ binarios xs = mapF (\x -> foldl toDigit 0 (toBin x :: [Int])) xs
 -- Un número triangular es aquel que puede recomponerse en la forma de un
 -- tríangulo equilátero.
 triangulares :: [Int] -> [Int]
-triangulares l =  filterF tP l
+triangulares l = filterF tP l
 
 ---------------------------------------------------------------------------------
 --------                          AUXILIARES                             --------
