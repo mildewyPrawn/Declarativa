@@ -165,15 +165,15 @@ module Braun where
                                         then (BNode v (updateAuxI i it xs x) d)
                                         else (BNode v i (updateAuxI d it xs x))
 
- myDiv n = if even n2 then n2 - 1 else n2
-  where n2= div n 2
-
  auxI n = reverse $ auxI2 [n] n
 
  auxI2 :: [Int] -> Int -> [Int]
  auxI2 l 1 = l
  auxI2 l n = auxI2 (l++[n0])  n0
   where n0 = myDiv n
+
+ myDiv n = if even n2 then n2 - 1 else n2
+  where n2= div n 2
 
  myDiv2 n = if even n2 then n2 else n2-1
   where n2 = div n 2
