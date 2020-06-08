@@ -45,7 +45,8 @@ goldbachD n = do
   return (f1,f2,f3)
 
 
-data Log a = Log { value :: a , logs :: [ String ] } deriving (Show, Eq)
+-- https://github.com/DiegoVicen/monadic-gcd
+data Log a = Log { value :: a, logs :: [ String ] } deriving (Show, Eq)
 
 instance Functor Log where
    fmap f (Log x l) = Log (f x) l
@@ -55,10 +56,17 @@ instance Applicative Log where
    (<*>) (Log f l1) (Log x l2) = Log (f x) (l1++l2)
 
 instance Monad Log where
-   return x = Log x []
-   (>>=) (Log v l) f = (f v)
+   return = pure
+   (>>=) (Log v l) f = let Log v' l' = f v in Log v' (l ++ l')
 
-f a = a
-
-a=(Log f ["Holaa"])
-b=(Log 2 ["Holab"])
+gcdlog :: Int -> Int -> Log Int
+gcdlog x y
+  | x < y = do
+      Log () ["swap(" ++ show y ++ "," ++ show x ++ ")"]
+      gcdlog y x
+  | y == 0 = do
+      Log () ["GCD:" ++ show x]
+      return x
+  | otherwise = do
+      Log () [" mod(" ++ show y ++ ", " ++ show x ++ ") = " ++ show (x `mod` y)]
+      gcdlog y (x `mod` y)
