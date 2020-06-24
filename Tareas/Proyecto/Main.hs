@@ -36,7 +36,7 @@ main = do
     [file] -> do
       (t, c) <- parseFile file
       let new_c = translate c
-      _ <- play 7 new_c
+      _ <- play t new_c
       return ()
     _ -> printf "Error. No hay argumentos.\n"
 
