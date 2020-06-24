@@ -8,3 +8,4 @@ output.bin
 *.dvi
 *.log
 *.out
+*.pyg
