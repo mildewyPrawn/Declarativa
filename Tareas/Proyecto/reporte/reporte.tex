@@ -79,18 +79,18 @@ elegimos Haskell porque si nos ibamos a meter en un terreno desconocido, al meno
 queríamos conocer un poco el lenguaje, y honestamente fué una buena decisión. A
 continuación explicamos las ideas fundamentales para desarrollar el proyecto,
 como ejecutar el programa resultante y las conclusiónes que pudimos obtener a
-partir de esta experiencia. 
+partir de esta experiencia.
 
 \section{Justificación del diseño}
 \noindent Para explicar el desarrollo se deben tener en mente ciertos conceptos
 de sonido y música. El sonido es una vibración que se propaga, naturalmente en
 forma de onda y según la forma que tenga la onda es el sonido que podemos
-percibir, por ejemplo la intencidad del sonido está en función de la amplitud de
-la onda y el tono del sonido está en función de la frecuencia.
+percibir, por ejemplo la intencidad del sonido está en función de la amplitud dela onda y el tono del sonido está en función de la frecuencia.
+Si tomamos una onda, por ejemplo sinusoidal, y modificamos su frecuencia a 440Hz decimos que la nota que genera es un \textit{La}, y como no estamos generando sus armónicos decimos que es una nota pura.\\
+Con esto explicado vamos a seguir el proceso por el que pasa una nota del archivo de entrada hasta su reproducción. Entonces, cuando invocamos al función principal \texttt{interactive} lo primero que vamos a hacer es separar el archivo de entrada en una tupla (t,c), dónde \texttt{t} va a ser la duración de las notas y \texttt{c} va a ser una cadena que contiene todas las notas del archivo, la función encargada de esto es \texttt{parseFile} y se auxilia de \texttt{concater} y \texttt{cleanComment}, a continuación llamamos a la función principal \texttt{play} con t y el resultado de aplciar la funcion \texttt{translate} a \texttt{c}, \texttt{translate} lo que va a hacer es arrojar una lista de números flotantes sólo para las notas contempladas, por ejemplo, en nuestro caso tenemos en la lista \texttt{notes} 12 posibles notas con sus respectivos ordenes, por lo que los 12 primeros elementos de la lista \texttt{['A'..]} tienen una nota asociada, las primeras 7 para las notas naturales y las 5 restantes para las notas sostenidas. Con esto terminamos el proceso de análisis sitnactico del archivo, cabe resaltar que gracias a este diseño agregar notas se vuelve trivial, solo se deben agregar las notas deseadas a la lista \texttt{notes} del archivo \textit{Proyecto.hs}.\\
 
-Si tomamos una onda, por ejemplo sinusoidal, y modificamos su frecuencia a 440Hz
-decimos que la nota que genera es un \textit{La}, y como no estamos generando sus
-armónicos decimos que es una nota pura.
+
+
 
 
 
@@ -125,7 +125,7 @@ sigueindo las siguientes reglas:
   comentarios o notas en la notación anglosajona musical separadas por un espacio.
   \begin{itemize}
   \item [Ejemplo:] \texttt{C C G G A A G}
-    
+
     \textit{Este ejemplo representaría las notas
       \texttt{Do Do Sol Sol La La Sol}}
   \end{itemize}
