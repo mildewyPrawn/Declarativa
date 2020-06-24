@@ -85,9 +85,44 @@ partir de esta experiencia.
 \noindent Para explicar el desarrollo se deben tener en mente ciertos conceptos
 de sonido y música. El sonido es una vibración que se propaga, naturalmente en
 forma de onda y según la forma que tenga la onda es el sonido que podemos
-percibir, por ejemplo la intencidad del sonido está en función de la amplitud dela onda y el tono del sonido está en función de la frecuencia.
-Si tomamos una onda, por ejemplo sinusoidal, y modificamos su frecuencia a 440Hz decimos que la nota que genera es un \textit{La}, y como no estamos generando sus armónicos decimos que es una nota pura.\\
-Con esto explicado vamos a seguir el proceso por el que pasa una nota del archivo de entrada hasta su reproducción. Entonces, cuando invocamos al función principal \texttt{interactive} lo primero que vamos a hacer es separar el archivo de entrada en una tupla (t,c), dónde \texttt{t} va a ser la duración de las notas y \texttt{c} va a ser una cadena que contiene todas las notas del archivo, la función encargada de esto es \texttt{parseFile} y se auxilia de \texttt{concater} y \texttt{cleanComment}, a continuación llamamos a la función principal \texttt{play} con t y el resultado de aplciar la funcion \texttt{translate} a \texttt{c}, \texttt{translate} lo que va a hacer es arrojar una lista de números flotantes sólo para las notas contempladas, por ejemplo, en nuestro caso tenemos en la lista \texttt{notes} 12 posibles notas con sus respectivos ordenes, por lo que los 12 primeros elementos de la lista \texttt{['A'..]} tienen una nota asociada, las primeras 7 para las notas naturales y las 5 restantes para las notas sostenidas. Con esto terminamos el proceso de análisis sitnactico del archivo, cabe resaltar que gracias a este diseño agregar notas se vuelve trivial, solo se deben agregar las notas deseadas a la lista \texttt{notes} del archivo \textit{Proyecto.hs}.\\
+percibir, por ejemplo la intencidad del sonido está en función de la amplitud
+de la onda y el tono del sonido está en función de la frecuencia. Si tomamos una
+onda, por ejemplo sinusoidal, y modificamos su frecuencia a 440Hz decimos que la
+nota que genera es un \textit{La}, y como no estamos generando sus armónicos
+decimos que es una nota pura.
+
+Con esto explicado vamos a seguir el proceso por el que pasa una nota del archivo
+de entrada hasta su reproducción. Entonces, cuando invocamos al función principal
+\texttt{interactive} lo primero que vamos a hacer es separar el archivo de
+entrada en una tupla (t,c), dónde \texttt{t} va a ser la duración de las notas y
+\texttt{c} va a ser una cadena que contiene todas las notas del archivo, la
+función encargada de esto es \texttt{parseFile} y se auxilia de
+\texttt{concater} y \texttt{cleanComment}, a continuación llamamos a la función
+principal \texttt{play} con t y el resultado de aplciar la función
+\texttt{translate} a \texttt{c}, \texttt{translate} lo que va a hacer es arrojar
+una lista de números flotantes sólo para las notas contempladas, por ejemplo, en
+nuestro caso tenemos en la lista \texttt{notes} 12 posibles notas con sus
+respectivos ordenes, por lo que los 12 primeros elementos de la lista
+\texttt{['A'..]} tienen una nota asociada, las primeras 7 para las notas
+naturales y las 5 restantes para las notas sostenidas. Con esto terminamos el
+proceso de análisis sitnactico del archivo, cabe resaltar que gracias a este
+diseño agregar notas se vuelve trivial, solo se deben agregar las notas deseadas
+a la lista \texttt{notes} del archivo \textit{Proyecto.hs}.
+
+Los números que tiene un elemento de tipo \texttt{Note}, son el nombre y un
+flotante, este le da un orden en la escala musical, por ejemplo \texttt{Do} es la
+primer nota, por lo que tiene asociado el número \texttt{0.0}. La razón de usar
+flotantes y no enteros es que eso nos evita parsearlo en la parte de
+\texttt{Proyecto.wave}.
+
+Una vez que tenemos la lista de notas, podemos producir sonido, para esto, nos
+auxiliamos de una fórmula\cite{formula}, la cual nos ayuda a calcular la
+frecuencia que tiene que tener una nota musical. Personalmente, nos agrada el
+sonido de un piano, así que haciendo un poco de investigación, nos encontramos
+con que, el piano al tener 88 teclas, la tecla número 49 es la nota
+\texttt{La$_{4}$}, y con esa nueva fórmula, podemos calcular las 88 teclas del
+piano\footnote{Sin embargo, esto no es tan sencillo. Ver
+  \texttt{\hyperref[sec:TaF]{Trabajo a Futuro}}}
 
 
 
@@ -169,6 +204,7 @@ encuentran en el \texttt{Makefile} (En caso de que no se tenga el paquete
 \texttt{make} o se tenga desconfianza de lo que este pueda hacer).
 
 \section{Trabajo a Futuro}
+\label{sec:TaF}
 Existen varias bibliotecas\cite{paul} que se pueden utilizar para generar un
 sonido más puro, incluso usando varios instrumentos; Sin embargo nos fue
 complicado usarlas, por cuestiones de \texttt{Cabal}, o del reproductor de música
