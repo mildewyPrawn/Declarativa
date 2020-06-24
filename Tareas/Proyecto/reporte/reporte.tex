@@ -1,25 +1,27 @@
+%%% TeX-command-extra-options: "-shell-escape"
+
 \documentclass[10pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath}
-\usepackage[spanish]{babel}
-\usepackage{tikz}
-\usepackage{amsfonts}
-\usepackage{listings}
-\usepackage[sfdefault]{overlock}
 \usepackage[T1]{fontenc}
+\usepackage[sfdefault]{overlock}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
 \usepackage{graphicx}
-\usepackage{listings}
-\usepackage{xcolor}
-\usepackage{pagecolor}
-\usepackage{lipsum}
-\usepackage{minted}
 \usepackage{hyperref}
+\usepackage{lipsum}
+\usepackage{listings}
+\usepackage{listings}
+\usepackage{minted}
+\usepackage{pagecolor}
+\usepackage{tikz}
+\usepackage{xcolor}
 
 \hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    filecolor=magenta,
-    urlcolor=gunaPink,
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,
+  urlcolor=gunaPink,
 }
 
 \definecolor{gunaPink}{RGB}{184,44,93}
@@ -61,57 +63,171 @@
 
 \title{Facultad de Ciencias, UNAM.\\Programación declarativa.\\ Proyecto.}
 \author{Emiliano Galeana Araujo\\ Juan Alfonso Garduño Solís}
-\date{}
+\date{\today}
 
 \begin{document}
 \maketitle
 \section{Introducción}
-\noindent A grandes nuestro proyecto es un programa que a partir de un archivo fuente con notas músicales genera ondas de sonido correspondientes a  dichas notas  para después reproducirlas con un programa externo. Propusimos este tema de proyecto por curiosidad y gusto; curiosidad porque no teníamos mucha idea de cómo generar sonidos con algún lenguaje de programación y mucho menos con un lenguaje de programación declarativo, pero sabiamos que seguramente era posible y queríamos intentarlo, y gusto porque a quién no le gusta la música. Naturalmente elegimos Haskell porque si nos ibamos a meter en un terreno desconocido, al menos queríamos conocer un poco el lenguaje, y honestamente fué una buena decisión. A continuación explicamos las ideas fundamentales para desarrollar el proyecto, como ejecutar el programa resultante y las conclusiónes que pudimos obtener a partir de esta experiencia. \\
+\noindent A grandes rasgos nuestro proyecto es un programa que a partir de un
+archivo fuente con notas músicales genera ondas de sonido correspondientes a
+dichas notas  para después reproducirlas con un programa externo. Propusimos este
+tema de proyecto por curiosidad y gusto; curiosidad porque no teníamos mucha idea
+de cómo generar sonidos con algún lenguaje de programación y mucho menos con un
+lenguaje de programación declarativo, pero sabiamos que seguramente era posible y
+queríamos intentarlo, y gusto porque a quién no le gusta la música. Naturalmente
+elegimos Haskell porque si nos ibamos a meter en un terreno desconocido, al menos
+queríamos conocer un poco el lenguaje, y honestamente fué una buena decisión. A
+continuación explicamos las ideas fundamentales para desarrollar el proyecto,
+como ejecutar el programa resultante y las conclusiónes que pudimos obtener a
+partir de esta experiencia. 
 
 \section{Justificación del diseño}
-\noindent Para explicar el desarrollo se deben tener en mente ciertos conceptos de sonido y música. El sonido es una vibración que se propaga, naturalmente en forma de onda y según la forma que tenga la onda es el sonido que podemos percibir, por ejemplo la intencidad del sonidoe está en función de la amplitud de la onda y el tono del sonido está en función de la frecuencia. \\
-Si tomamos una onda, por ejemplo sinusoidal, y modificamos su frecuencia a 440Hz decimos que la nota que genera es un La, y como no estamos generando sus armónicos decimos que es una nota pura.\\
+\noindent Para explicar el desarrollo se deben tener en mente ciertos conceptos
+de sonido y música. El sonido es una vibración que se propaga, naturalmente en
+forma de onda y según la forma que tenga la onda es el sonido que podemos
+percibir, por ejemplo la intencidad del sonido está en función de la amplitud de
+la onda y el tono del sonido está en función de la frecuencia.
+
+Si tomamos una onda, por ejemplo sinusoidal, y modificamos su frecuencia a 440Hz
+decimos que la nota que genera es un \textit{La}, y como no estamos generando sus
+armónicos decimos que es una nota pura.
+
 \textbf{Aquí viene la parte difícil, entiendo el código y todo el desmadre pero ya no supe como redactarlo, pero sale hoy}
 
 \section{Ejecución}
-\noindent Para ejecutar correctamente el programa se debe de tener el software \href{https://ffmpeg.org/}{FFmpeg} instalado en la computadora ya que este es el encargado de reproducir las notas generadas por nuestro programa a través de la herramienta \texttt{ffplay}, la instalación no debería ser complicada. Para el desarrollo del proyecto se utilizó \href{https://www.haskell.org/ghc/}{GHC}, así que se recomienda que el modo interactivo que se utilice para cargar el proyecto sea \texttt{GHCi}, no garantizamos el correcto funcionamiento del proyecto si se utiliza un compilador distinto.\\
-Además de tener el archivo de entrada (la canción), el cuál debe estar construido sigueindo las siguientes reglas:
-\begin{itemize}
-\item[\textbullet] El archivo puede tener comentarios, las lineas del archivo que sean un comentario deben de comenzar con el caractér \textbf{\#}.
-	\begin{itemize}
-		\item [Ejemplo:] \#Este es un comentario
-	\end{itemize}
-\item[\textbullet] La primer linea del archivo que no sea un comentario debe de ser un número (no necesariamente entero), este número  representa el tiempo en segundos que todas las notas van a durar.
-	\begin{itemize}
-		\item [Ejemplo:] 0.25
-		\item [Ejemplo:] 1
-	\end{itemize}
-\item[\textbullet] Las lineas siguientes al número del tiempo deben ser comentarios o notas en la notación anglosajona musical separadas por un espacio.
-	\begin{itemize}
-		\item [Ejemplo:] C C G G A A G\\
-		\textit{Este ejemplo representaría las notas Do Do Sol Sol La La Sol}
-	\end{itemize}
-\end{itemize}
-El archivo \texttt{estrellita.je} es un ejemplo de un archivo de de entrada bien construido y como su nombre lo indica, codifica la cancion estrellita.\\
-Una vez que cumplidos estos requisitos se debe abrir una terminal en un directorio que contenga los tres módulos del proyecto \textbf{AQUI VAN LOS NOMBRES FINALES DE LOS MÓDULOS-----------} y el archivo que contiene la canción a ejecutar, vamos a decir que este archivo es \texttt{estrellita.je}.
-\\ En la terminal vamos a ingresar al modo interactivo de GHC con el comando \texttt{gchi Main.hs}, ya que estamos dentro con el comando \texttt{interactive ''estrellita.je''} se ejecuta el programa y se reproduce la cancion al cabo de unos segundos.\\
+\noindent Para ejecutar correctamente el programa se debe de tener el software
+\href{https://ffmpeg.org/}{FFmpeg} instalado en la computadora ya que este es el
+encargado de reproducir las notas generadas por nuestro programa a través de la
+herramienta \texttt{ffplay}, la instalación no debería ser complicada. Para el
+desarrollo del proyecto se utilizó \href{https://www.haskell.org/ghc/}{GHC}, así
+que se recomienda que el modo interactivo que se utilice para cargar el proyecto
+sea \texttt{GHCi}, no garantizamos el correcto funcionamiento del proyecto si se
+utiliza un compilador distinto.
 
-\section{Conclusión}
-\noindent Normalmente como programadores no salimos de ciertas zonas de confort (paradigmas) porque son con las que nos instruyeron o son las maneras más naturales de pensar una solución a los problemas que se nos pueden presentar, sin embargo hay formas de solucionar los mismos problemas con distintos enfoques. Para realizar un ejercicio como el presentado en este proyecto lo último que alguien normalmente pensaría sería programarlo en Haskell o cualquier otro lenguaje declarativo porque es difícil ver el camino a seguir, pero es posible y tal vez hasta es más fácil y rápido que el camino habitual. Si bien el proyecto honestamente no tenga mucha utilidad, es el fruto del uso de practicamente todo lo revisado en el curso, desde utilizar elementos que nos brinda el lenguaje y el paradigma como listas por comprención, caza de patrones, mónadas u operadores fold, hasta estrategias (mañas) para solucionar problemas con cierto patron. Claro que además de la capacidad de modelar el problema en la computadora, en este caso particular modelar las ondas de sonido, dicha capacidad adquirida a lo largo de la carrera.\\
-Entonces, en conclusión podemos decir que.... \textbf{No se me ocurrió nada más jajaja}
+Además de tener el archivo de entrada (la canción), el cuál debe estar construido
+sigueindo las siguientes reglas:
+\begin{itemize}
+\item[\textbullet] El archivo puede tener comentarios, las lineas del archivo que
+  sean un comentario deben de comenzar con el caractér \textbf{\#}.
+  \begin{itemize}
+  \item [Ejemplo:] \texttt{\# Este es un comentario}
+  \end{itemize}
+\item[\textbullet] La primer linea del archivo que no sea un comentario debe de
+  ser un número (no necesariamente entero), este número  representa el tiempo en
+  segundos que todas las notas van a durar.
+  \begin{itemize}
+  \item [Ejemplo:] \texttt{0.25}
+  \item [Ejemplo:] \texttt{1}
+  \end{itemize}
+\item[\textbullet] Las lineas siguientes al número del tiempo deben ser
+  comentarios o notas en la notación anglosajona musical separadas por un espacio.
+  \begin{itemize}
+  \item [Ejemplo:] \texttt{C C G G A A G}
+    
+    \textit{Este ejemplo representaría las notas
+      \texttt{Do Do Sol Sol La La Sol}}
+  \end{itemize}
+\end{itemize}
+
+Los archivos \texttt{estrellita.je, titanic.je} son ejemplos de archivos con una
+entrada bien construida y cofifican la canción que su nombre lo indica. Suenan
+relativamente bien, pero no tanto.
+
+Existen dos maneras de ejecutar el programa, con el intérprete y compilando.
+
+\subsection{Intérprete}
+Una vez cumplidos los requisitos anteriores (el archivo bien hecho) se debe abrir
+una terminal en un directorio que contenga los tres módulos del proyecto, los
+cuales llevan por nombre \texttt{Main.hs, Music.hs, Proyecto.hs} y el archivo que
+contiene la canción a ejecutar, vamos a decir que este archivo es
+\texttt{estrellita.je}.
+
+En la terminal vamos a ingresar al modo interactivo de GHC con el comando
+\texttt{gchi Main.hs}, ya que estamos dentro con el comando
+\texttt{interactive ''estrellita.je''} se ejecuta el programa y se reproduce la
+cancion al cabo de unos segundos.
+
+\subsection{Compilar (make)}
+Para esta opción, se requiere el paquete
+\href{https://www.archlinux.org/packages/core/x86\_64/make/}{make} y las opciones
+para nuestro programa son:
+
+\begin{itemize}
+\item \texttt{make all}, el cuál nos muestra todas las opciones (Las que se
+  muestran a continuación).
+\item \texttt{make compile}, el cual compila el proyecto.
+\item \texttt{make run FILE="estrellita.je"}, el cual ejecuta el programa y pasa
+  como argumento el archivo \texttt{estrellita.je}.
+\item \texttt{make clean}, el cual limpia los archivos que se generan cuando se
+  compila, así como el ejecutable y el archivo que interpreta \texttt{ffplay}.
+\end{itemize}
+
+Adionalmente, se puede compilar el proyecto con las instrucciones que se
+encuentran en el \texttt{Makefile} (En caso de que no se tenga el paquete
+\texttt{make} o se tenga desconfianza de lo que este pueda hacer).
+
+\section{Trabajo a Futuro}
+Existen varias bibliotecas\cite{paul} que se pueden utilizar para generar un
+sonido más puro, incluso usando varios instrumentos; Sin embargo nos fue
+complicado usarlas, por cuestiones de \texttt{Cabal}, o del reproductor de música
+(Se necesita un reproductor que pueda interpretar archivos \texttt{MIDI}). Así
+que portar el proyecto para que pueda producir sonidos más puros sería un buen
+avance.
+
+Otra cosa es que cualquier música que queramos reproducir, las notas tienen un
+tiempo defindo y es el mismo (La primer línea de los archivos \texttt{*.je}),
+poder cambiar el sonido en distintas notas sería un buen avance para producir
+música más del estilo que conocemos.
+
+Lo último es que, debido a cómo generamos el sonido, algunos archivos pueden
+llegar a pesar mucho (Como el \texttt{output.bin} de \texttt{titanic.je}), esto
+por el número de ondas que generamos, como se dijo anteriormente, ese número fue
+el más aproximado a un sonido grave, reducir el tamaño de los archivos de salida
+sería algo ideal para una segunda versión del proyecto.
+
+\section{Conclusiones}
+\noindent Normalmente como programadores no salimos de ciertas zonas de confort
+(paradigmas) porque son con las que nos instruyeron o son las maneras más
+naturales de pensar una solución a los problemas que se nos pueden presentar, sin
+embargo hay formas de solucionar los mismos problemas con distintos enfoques.
+Para realizar un ejercicio como el presentado en este proyecto lo último que
+alguien normalmente pensaría sería programarlo en Haskell o cualquier otro
+lenguaje declarativo porque es difícil ver el camino a seguir, pero es posible y
+tal vez hasta es más fácil y rápido que el camino habitual. Si bien el proyecto
+honestamente no tenga mucha utilidad, es el fruto del uso de practicamente todo
+lo revisado en el curso, desde utilizar elementos que nos brinda el lenguaje y el
+paradigma como listas por comprención, caza de patrones, mónadas u operadores
+fold, hasta estrategias (mañas) para solucionar problemas con cierto patron.
+Claro que además de la capacidad de modelar el problema en la computadora, en
+este caso particular modelar las ondas de sonido, dicha capacidad adquirida a lo
+largo de la carrera.
+
+Entonces, en conclusión podemos decir que el proyecto fue divertido, aprendimos
+varias cosas (No solamente de computación), incluso estructuras de datos que
+nunca habíamos usado en un entorno declarativo:
 
 \begin{minted}{haskell}
-translate (x:xs) =
+  translate (x:xs) =
   if isAlpha x
   then
-    let
-      posible_note = Map.lookup x mapi
-    in
-      case posible_note of
-        Just (note, ord) -> [(ord + 40)] ++ translate xs
-        Nothing -> [] -- omite las letras que no estn.
+  let
+  posible_note = Map.lookup x mapi
+  in
+  case posible_note of
+  Just (note, ord) -> [(ord + 40)] ++ translate xs
+  Nothing -> [] -- omite las letras que no estn.
   else translate xs
 \end{minted}
 
-\section{Bibliografía}
+Podría ser algo que desarrollemos mejor en un futuro, no es de mucha utilidad,
+ya que existen mejores maneras de crear música, incluso con código, más aún,
+herramientas que utilizan haskell\cite{tidal}, pero sin duda es algo distinto a
+todo lo que habíamos hecho antes en la carrera.
+
+\bibliography{bib} {
+  \nocite{paul}
+  \nocite{tidal}
+}
+\bibliographystyle{ieeetr}
+
 \end{document}
