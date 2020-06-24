@@ -1,0 +1,10 @@
+# All
+*.*~
+output.bin
+# LaTeX
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.log
+*.out
