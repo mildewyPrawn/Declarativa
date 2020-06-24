@@ -1,0 +1,12 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+  \PYG{n}{translate} \PYG{p}{(}\PYG{n}{x}\PYG{k+kt}{:}\PYG{n}{xs}\PYG{p}{)} \PYG{o+ow}{=}
+  \PYG{k+kr}{if} \PYG{n}{isAlpha} \PYG{n}{x}
+  \PYG{k+kr}{then}
+  \PYG{k+kr}{let}
+  \PYG{n}{posible\PYGZus{}note} \PYG{o+ow}{=} \PYG{k+kt}{Map}\PYG{o}{.}\PYG{n}{lookup} \PYG{n}{x} \PYG{n}{mapi}
+  \PYG{k+kr}{in}
+  \PYG{k+kr}{case} \PYG{n}{posible\PYGZus{}note} \PYG{k+kr}{of}
+  \PYG{k+kt}{Just} \PYG{p}{(}\PYG{n}{note}\PYG{p}{,} \PYG{n}{ord}\PYG{p}{)} \PYG{o+ow}{\PYGZhy{}\PYGZgt{}} \PYG{p}{[(}\PYG{n}{ord} \PYG{o}{+} \PYG{l+m+mi}{40}\PYG{p}{)]} \PYG{o}{++} \PYG{n}{translate} \PYG{n}{xs}
+  \PYG{k+kt}{Nothing} \PYG{o+ow}{\PYGZhy{}\PYGZgt{}} \PYG{k+kt}{[]} \PYG{c+c1}{\PYGZhy{}\PYGZhy{} omite las letras que no estn.}
+  \PYG{k+kr}{else} \PYG{n}{translate} \PYG{n}{xs}
+\end{Verbatim}
