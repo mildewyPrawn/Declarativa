@@ -63,73 +63,64 @@
 
 \title{Facultad de Ciencias, UNAM.\\Programación declarativa.\\ Proyecto.}
 \author{Emiliano Galeana Araujo\\ Juan Alfonso Garduño Solís}
-\date{\today}
+\date{\small{\today}}
 
 \begin{document}
 \maketitle
 \section{Introducción}
 \noindent A grandes rasgos nuestro proyecto es un programa que a partir de un
-archivo fuente con notas músicales genera ondas de sonido correspondientes a
+archivo fuente con notas musicales genera ondas de sonido correspondientes a
 dichas notas  para después reproducirlas con un programa externo. Propusimos este
 tema de proyecto por curiosidad y gusto; curiosidad porque no teníamos mucha idea
-de cómo generar sonidos con algún lenguaje de programación y mucho menos con un
-lenguaje de programación declarativo, pero sabiamos que seguramente era posible y
+de como generar sonidos con algún lenguaje de programación y mucho menos con un
+lenguaje de programación declarativo, pero sabíamos que seguramente era posible y
 queríamos intentarlo, y gusto porque a quién no le gusta la música. Naturalmente
-elegimos Haskell porque si nos ibamos a meter en un terreno desconocido, al menos
-queríamos conocer un poco el lenguaje, y honestamente fué una buena decisión. A
+elegimos Haskell porque si nos íbamos a meter en un terreno desconocido, al menos
+queríamos conocer un poco el lenguaje, y honestamente fue una buena decisión. A
 continuación explicamos las ideas fundamentales para desarrollar el proyecto,
-como ejecutar el programa resultante y las conclusiónes que pudimos obtener a
+como ejecutar el programa resultante y las conclusiones que pudimos obtener a
 partir de esta experiencia.
 
 \section{Justificación del diseño}
 \noindent Para explicar el desarrollo se deben tener en mente ciertos conceptos
 de sonido y música. El sonido es una vibración que se propaga, naturalmente en
 forma de onda y según la forma que tenga la onda es el sonido que podemos
-percibir, por ejemplo la intencidad del sonido está en función de la amplitud
+percibir, por ejemplo la intensidad del sonido está en función de la amplitud
 de la onda y el tono del sonido está en función de la frecuencia. Si tomamos una
 onda, por ejemplo sinusoidal, y modificamos su frecuencia a 440Hz decimos que la
 nota que genera es un \textit{La}, y como no estamos generando sus armónicos
 decimos que es una nota pura.
-
-Con esto explicado vamos a seguir el proceso por el que pasa una nota del archivo
-de entrada hasta su reproducción. Entonces, cuando invocamos al función principal
-\texttt{interactive} lo primero que vamos a hacer es separar el archivo de
-entrada en una tupla (t,c), dónde \texttt{t} va a ser la duración de las notas y
-\texttt{c} va a ser una cadena que contiene todas las notas del archivo, la
-función encargada de esto es \texttt{parseFile} y se auxilia de
-\texttt{concater} y \texttt{cleanComment}, a continuación llamamos a la función
-principal \texttt{play} con t y el resultado de aplciar la función
-\texttt{translate} a \texttt{c}, \texttt{translate} lo que va a hacer es arrojar
+Con esto explicado vamos a seguir el proceso por el que pasa el archivo
+de entrada hasta su reproducción. Entonces, cuando invocamos al función que inicia todo
+\textcolor{gunaBlueLite}{\texttt{interactive}} lo primero que vamos a hacer es separar el archivo de
+entrada en una tupla \texttt{(\textcolor{gunaOrange}{t},\textcolor{gunaOrange}{c})}, dónde \texttt{\textcolor{gunaOrange}{t}} va a ser la duración de las notas y
+\texttt{\textcolor{gunaOrange}{c}} va a ser una cadena que contiene todas las notas del archivo, la
+función encargada de esto es \textcolor{gunaBlueLite}{\texttt{parseFile}} y se auxilia de
+\textcolor{gunaBlueLite}{\texttt{concater}} y \textcolor{gunaBlueLite}{\texttt{cleanComment}}, a continuación llamamos a la función
+principal \textcolor{gunaBlueLite}{\texttt{play}} con \texttt{\textcolor{gunaOrange}{t}} y el resultado de aplicar la función
+\textcolor{gunaBlueLite}{\texttt{translate}} a \textcolor{gunaOrange}{\texttt{c}}, \textcolor{gunaBlueLite}{\texttt{translate}} lo que va a hacer es arrojar
 una lista de números flotantes sólo para las notas contempladas, por ejemplo, en
-nuestro caso tenemos en la lista \texttt{notes} 12 posibles notas con sus
+nuestro caso tenemos en la lista \textcolor{gunaOrage}{\texttt{notes}} 12 posibles notas con sus
 respectivos ordenes, por lo que los 12 primeros elementos de la lista
 \texttt{['A'..]} tienen una nota asociada, las primeras 7 para las notas
 naturales y las 5 restantes para las notas sostenidas. Con esto terminamos el
-proceso de análisis sitnactico del archivo, cabe resaltar que gracias a este
-diseño agregar notas se vuelve trivial, solo se deben agregar las notas deseadas
-a la lista \texttt{notes} del archivo \textit{Proyecto.hs}.
-
-Los números que tiene un elemento de tipo \texttt{Note}, son el nombre y un
-flotante, este le da un orden en la escala musical, por ejemplo \texttt{Do} es la
-primer nota, por lo que tiene asociado el número \texttt{0.0}. La razón de usar
-flotantes y no enteros es que eso nos evita parsearlo en la parte de
-\texttt{Proyecto.wave}.
-
-Una vez que tenemos la lista de notas, podemos producir sonido, para esto, nos
-auxiliamos de una fórmula\cite{formula}, la cual nos ayuda a calcular la
-frecuencia que tiene que tener una nota musical. Personalmente, nos agrada el
-sonido de un piano, así que haciendo un poco de investigación, nos encontramos
-con que, el piano al tener 88 teclas, la tecla número 49 es la nota
-\texttt{La$_{4}$}, y con esa nueva fórmula, podemos calcular las 88 teclas del
-piano\footnote{Sin embargo, esto no es tan sencillo. Ver
-  \texttt{\hyperref[sec:TaF]{Trabajo a Futuro}}}
+proceso de análisis sintáctico del archivo, cabe resaltar que gracias a este diseño agregar notas se vuelve trivial, solo se deben agregar las notas deseadas a la lista \textcolor{gunaOrange}{\texttt{notes}} del archivo \textit{Proyecto.hs} sin perder de vista que los elementos de tipo \texttt{Note} representan a una nota en la escala musical, esta nota está representada por su nombre y por un lugar en la escala, esto quiere decir que la escala tiene un orden, por ejemplo \texttt{Do} es la primer nota, por lo que tiene asociado el número 0.0. La razón de usar flotantes y no enteros es que eso nos evita parsearlo en la parte de \textcolor{gunaBlueLite}{\texttt{Proyecto.wave}}.\\
+Retomando la explicación del funcionamiento de la función \textcolor{gunaBlueLite}{\texttt{play}}, en esta es que vamos a utilizar todo lo que se explicó al principio sobre el sonido, esta función lo primero que va a hacer es guardar en un archivo binario las ondas que generan las notas que acabamos de traducir a números, lo importante es como construimos las ondas. De esto se encarga la función \textcolor{gunaBlueLite}{\texttt{wave}} que toma la duración deseada de las notas y las notas para a continuacion calcular una por una  frecuencia con la función \textcolor{gunaBlueLite}{\texttt{fp}} que se basa totalmente en la referencia\cite{formula} y seguidamente construya la verdadera onda con \textcolor{gunaBlueLite}{\texttt{freq}}, justo en \textcolor{gunaBlueLite}{\texttt{freq}} es cuando se ve como modificamos la amplitud de la onda con la constante \textcolor{gunaOrange}{\texttt{volume}} y la duración con la constante \textcolor{gunaOrange}{\texttt{sampleRate}} y el periodo de la onda que estamos utilizando (claramente el seno) $2\pi$.\\
+Construidas y guardadas las ondas solo nos falta reproducirlas, cosa que vamos a hacer con \textcolor{gunaBlueLite}{\texttt{runCommand}} y el parámetro\\
 
 
+\begin{center}
+\texttt{ffplay -f f32le -ar \%f cancion.bin}
+\end{center}
+Dónde:
+\begin{itemize}
+\item [\textbf{ffplay}] es la herramienta de \href{https://ffmpeg.org/}{FFmpeg} que vamos a utilizar.
+\item [\textbf{-f f32le}] forza a ffplay para que leea el archivo como números flotantes little-endian.
+\item [\textbf{ \%f }] es sustituido por el sample rate (número de muestras a reproducir por segundo).
+\item [\textbf{cancion.bin}] es el archivo a leer.
+\end{itemize}
 
-
-
-
-\textbf{Aquí viene la parte difícil, entiendo el código y todo el desmadre pero ya no supe como redactarlo, pero sale hoy}
+Y con esto terminamos la ejecución del programa si todo sale bien.
 
 \section{Ejecución}
 \noindent Para ejecutar correctamente el programa se debe de tener el software
@@ -167,7 +158,7 @@ sigueindo las siguientes reglas:
 \end{itemize}
 
 Los archivos \texttt{estrellita.je, titanic.je} son ejemplos de archivos con una
-entrada bien construida y cofifican la canción que su nombre lo indica. Suenan
+entrada bien construida y codifican la canción que su nombre lo indica. Suenan
 relativamente bien, pero no tanto.
 
 Existen dos maneras de ejecutar el programa, con el intérprete y compilando.
@@ -215,9 +206,7 @@ avance.
 Otra cosa es que cualquier música que queramos reproducir, las notas tienen un
 tiempo defindo y es el mismo (La primer línea de los archivos \texttt{*.je}),
 poder cambiar el sonido en distintas notas sería un buen avance para producir
-música más del estilo que conocemos.
-
-Lo último es que, debido a cómo generamos el sonido, algunos archivos pueden
+música más del estilo que conocemos. Lo último es que, debido a como generamos el sonido, algunos archivos pueden
 llegar a pesar mucho (Como el \texttt{cancion.bin} de \texttt{titanic.je}), esto
 por el número de ondas que generamos, como se dijo anteriormente, ese número fue
 el más aproximado a un sonido grave, reducir el tamaño de los archivos de salida
@@ -232,10 +221,10 @@ Para realizar un ejercicio como el presentado en este proyecto lo último que
 alguien normalmente pensaría sería programarlo en Haskell o cualquier otro
 lenguaje declarativo porque es difícil ver el camino a seguir, pero es posible y
 tal vez hasta es más fácil y rápido que el camino habitual. Si bien el proyecto
-honestamente no tenga mucha utilidad, es el fruto del uso de practicamente todo
+honestamente no tenga mucha utilidad, es el fruto del uso de prácticamente todo
 lo revisado en el curso, desde utilizar elementos que nos brinda el lenguaje y el
-paradigma como listas por comprención, caza de patrones, mónadas u operadores
-fold, hasta estrategias (mañas) para solucionar problemas con cierto patron.
+paradigma como listas por comprensión, caza de patrones, mónadas u operadores
+fold, hasta estrategias (mañas) para solucionar problemas con cierto patrón.
 Claro que además de la capacidad de modelar el problema en la computadora, en
 este caso particular modelar las ondas de sonido, dicha capacidad adquirida a lo
 largo de la carrera.
