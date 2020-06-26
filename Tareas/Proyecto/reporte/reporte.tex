@@ -90,6 +90,7 @@ de la onda y el tono del sonido está en función de la frecuencia. Si tomamos u
 onda, por ejemplo sinusoidal, y modificamos su frecuencia a 440Hz decimos que la
 nota que genera es un \textit{La}, y como no estamos generando sus armónicos
 decimos que es una nota pura.
+
 Con esto explicado vamos a seguir el proceso por el que pasa el archivo
 de entrada hasta su reproducción. Entonces, cuando invocamos al función que inicia todo
 \textcolor{gunaBlueLite}{\texttt{interactive}} lo primero que vamos a hacer es separar el archivo de
@@ -100,7 +101,7 @@ función encargada de esto es \textcolor{gunaBlueLite}{\texttt{parseFile}} y se 
 principal \textcolor{gunaBlueLite}{\texttt{play}} con \texttt{\textcolor{gunaOrange}{t}} y el resultado de aplicar la función
 \textcolor{gunaBlueLite}{\texttt{translate}} a \textcolor{gunaOrange}{\texttt{c}}, \textcolor{gunaBlueLite}{\texttt{translate}} lo que va a hacer es arrojar
 una lista de números flotantes sólo para las notas contempladas, por ejemplo, en
-nuestro caso tenemos en la lista \textcolor{gunaOrage}{\texttt{notes}} 12 posibles notas con sus
+nuestro caso tenemos en la lista \textcolor{gunaOrange}{\texttt{notes}} 12 posibles notas con sus
 respectivos ordenes, por lo que los 12 primeros elementos de la lista
 \texttt{['A'..]} tienen una nota asociada, las primeras 7 para las notas
 naturales y las 5 restantes para las notas sostenidas. Con esto terminamos el
